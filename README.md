@@ -17,4 +17,6 @@ If for some reason, Python (or another language) would suit better, please put t
 
 If your code is dependent on someone else's, please put comments indicating where one should enter/leave the state.
 
+**All states should inherit the Interaction state to ensure the fallback state works!**
+
 
