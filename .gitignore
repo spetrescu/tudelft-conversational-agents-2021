@@ -1,0 +1,5 @@
+Mathtutor/.gradle/*
+Mathtutor/build/*
+Mathtutor/logs/*
+Mathtutor/*.iml
+Mathtutor/*.idea/
