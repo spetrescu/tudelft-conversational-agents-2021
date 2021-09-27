@@ -1,0 +1,20 @@
+act chooseLanguage, uGreeting, uMentionSubject, uChooseSubject, chooseTest, chooseQuestion, chooseExample, chooseExplanation, doTest, endTest, getGrade, getExplanation, doExample, gradeLower6, gradeHigher6, partyOver, done, yes, no, explain, reward, leave, askQuestion, incrementDifficultyAndNewQuestion, explanation, askSimilarQuestion, stopQuestions;
+proc Language = chooseLanguage . Greeting;
+Greeting = uGreeting . ChooseSubject + uMentionSubject . SpecifiedSubject;
+ChooseSubject = uChooseSubject . SpecifiedSubject;
+SpecifiedSubject = chooseTest . Test + chooseQuestion . Question + 
+chooseExample . Example + chooseExplanation . Explanation;
+Test = doTest . TestDone;
+TestDone = getGrade . Grade;
+Grade = getExplanation . TestExplanation + endTest. EndTest;
+TestExplanation = explanation . EndTest;
+EndTest = gradeLower6 . SpecifiedSubject + gradeHigher6 . Party;
+Party = partyOver . ChooseSubject;
+Explanation = getExplanation . StayOnSubject;
+Example = doExample . StayOnSubject;
+Question = askQuestion . Answered;
+Answered = reward . AnotherOneIncremented + explain . NewQuestion;
+AnotherOneIncremented = incrementDifficultyAndNewQuestion . Question + stopQuestions . StayOnSubject;
+NewQuestion = askSimilarQuestion . Question + stopQuestions . StayOnSubject;
+StayOnSubject = yes . SpecifiedSubject + no . ChooseSubject;
+init Language;
