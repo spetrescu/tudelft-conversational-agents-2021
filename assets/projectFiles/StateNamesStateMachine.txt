@@ -1,0 +1,17 @@
+1. Choose Language (optional)
+2. Greet the user
+3. What Subject do you want to learn?
+4. Do you want to do a test, answer a test question, hear an explanation or do an example together?
+5. Let's start the etst
+6. The test is over
+7. This is your grade, do you want an explanation?
+8. Give user an explanation on their mistakes
+9. Depending on the grade, go party or go back to the subject
+10. Party time
+11. Give explanation on the subject
+12. Do a example question together
+13. Give the user a test question
+14. If they were correct, reward, if they were wrong, explain why
+15. After the reward, either increment the level of questions and ask another one or end the questions
+16. After the explanation, ask another question or end questions
+17. Do you want to stay on this subject?
