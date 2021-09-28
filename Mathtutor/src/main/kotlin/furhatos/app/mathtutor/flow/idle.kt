@@ -7,7 +7,7 @@ import furhatos.util.Language
 val Idle: State = state {
 
     init {
-        furhat.setVoice(Language.ENGLISH_US, Gender.MALE)
+        furhat.setVoice(Language.ENGLISH_US, Gender.MALE, setInputLanguage = true)
         if (users.count > 0) {
             furhat.attend(users.random)
             goto(Start)

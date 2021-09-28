@@ -1,19 +1,21 @@
 package furhatos.app.mathtutor.flow
 
-import furhatos.app.mathtutor.language.FallbackStateLanguage
+import furhatos.app.mathtutor.strings.FallbackStateStrings
 import furhatos.flow.kotlin.*
+import furhatos.util.Language
+
 
 val FallBackState: State = state {
     var noinput = 0
     var nomatch = 0
-    val language = "English"
+
 
     onResponse {
         ++nomatch
         if (nomatch == 1) {
-            furhat.say(FallbackStateLanguage(language).onResponseFirstResponse)
+            furhat.say(FallbackStateStrings(furhat.voice.language).onResponseFirstResponse)
         } else {
-            val responses = FallbackStateLanguage(language).onResponseOtherResponses
+            val responses = FallbackStateStrings(furhat.voice.language).onResponseOtherResponses
             furhat.say(responses.random())
         }
         reentry()
@@ -22,9 +24,9 @@ val FallBackState: State = state {
     onNoResponse {
         ++noinput
         if (noinput == 1) {
-            furhat.say(FallbackStateLanguage(language).onNoResponseFirstResponse)
+            furhat.say(FallbackStateStrings(furhat.voice.language).onNoResponseFirstResponse)
         } else {
-            val responses = FallbackStateLanguage(language).onNoResponseOtherResponses
+            val responses = FallbackStateStrings(furhat.voice.language).onNoResponseOtherResponses
             furhat.say(responses.random())
         }
         reentry()

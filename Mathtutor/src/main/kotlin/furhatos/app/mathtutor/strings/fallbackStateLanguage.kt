@@ -1,4 +1,6 @@
-package furhatos.app.mathtutor.language
+package furhatos.app.mathtutor.strings
+
+import furhatos.util.Language
 
 private val english = object {
     val onResponseFirstResponse = "Sorry, I did not quite get that."
@@ -8,7 +10,7 @@ private val english = object {
         "I heard something, but I could not comprehend it.",
         "I can hear you, but I won't."
     )
-    val onNoResponseFirstResponse = "Sorry, I could not hear you.";
+    val onNoResponseFirstResponse = "Sorry, I could not hear you."
     val onNoResponseOtherResponses: Array<String> = arrayOf(
         "I'm sorry, I am still unable to hear you.",
         "Could you perhaps speak up a little?",
@@ -24,7 +26,7 @@ private val dutch = object {
         "Zou je dat anders kunnen zeggen?",
         "Ik hoorde iets, maar ik kon het niet vatten."
     )
-    val onNoResponseFirstResponse = "Sorry, ik kon je niet verstaan.";
+    val onNoResponseFirstResponse = "Sorry, ik kon je niet verstaan."
     val onNoResponseOtherResponses: Array<String> = arrayOf(
         "Sorry, ik kan je nog steeds niet verstaan.",
         "Zou je iets harder kunnen praten",
@@ -33,25 +35,25 @@ private val dutch = object {
     val onResponseFailedResponse = "Mijn excuses, mijn spraakherkenning is buiten gebruik. Probeer het later opnieuw."
 }
 
-class FallbackStateLanguage(language: String) {
+class FallbackStateStrings(language: Language?) {
 
     val onResponseFirstResponse = when(language){
-        "Dutch" -> dutch.onResponseFirstResponse
+        Language.DUTCH -> dutch.onResponseFirstResponse
         else -> english.onResponseFirstResponse
     }
 
     val onResponseOtherResponses = when(language){
-        "Dutch" -> dutch.onResponseOtherResponses
+        Language.DUTCH -> dutch.onResponseOtherResponses
         else -> english.onResponseOtherResponses
     }
 
     val onNoResponseFirstResponse = when(language){
-        "Dutch" -> dutch.onNoResponseFirstResponse
+        Language.DUTCH -> dutch.onNoResponseFirstResponse
         else -> english.onNoResponseFirstResponse
     }
 
     val onNoResponseOtherResponses = when(language){
-        "Dutch" -> dutch.onNoResponseOtherResponses
+        Language.DUTCH -> dutch.onNoResponseOtherResponses
         else -> english.onNoResponseOtherResponses
     }
 }
