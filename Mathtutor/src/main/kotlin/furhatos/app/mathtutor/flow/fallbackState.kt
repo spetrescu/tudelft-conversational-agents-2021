@@ -13,9 +13,9 @@ val FallBackState: State = state {
     onResponse {
         ++nomatch
         if (nomatch == 1) {
-            furhat.say(FallbackStateStrings(furhat.voice.language).onResponseFirstResponse)
+            furhat.say(FallbackStateStrings(furhat.voice.language).getStrings().onResponseFirstResponse)
         } else {
-            val responses = FallbackStateStrings(furhat.voice.language).onResponseOtherResponses
+            val responses = FallbackStateStrings(furhat.voice.language).getStrings().onResponseOtherResponses
             furhat.say(responses.random())
         }
         reentry()
@@ -24,9 +24,9 @@ val FallBackState: State = state {
     onNoResponse {
         ++noinput
         if (noinput == 1) {
-            furhat.say(FallbackStateStrings(furhat.voice.language).onNoResponseFirstResponse)
+            furhat.say(FallbackStateStrings(furhat.voice.language).getStrings().onNoResponseFirstResponse)
         } else {
-            val responses = FallbackStateStrings(furhat.voice.language).onNoResponseOtherResponses
+            val responses = FallbackStateStrings(furhat.voice.language).getStrings().onNoResponseOtherResponses
             furhat.say(responses.random())
         }
         reentry()
