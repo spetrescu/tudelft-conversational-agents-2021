@@ -1,5 +1,6 @@
 package furhatos.app.mathtutor.strings
 
+import furhatos.flow.kotlin.Furhat
 import furhatos.util.Language
 
 interface FallBackStringsInterface: DataStringInterface {
@@ -43,11 +44,9 @@ class FallbackStringsDutch: FallBackStringsInterface {
     override val onResponseFailedResponse = "Mijn excuses, mijn spraakherkenning is buiten gebruik. Probeer het later opnieuw."
 }
 
-class FallbackStateStrings(private val language: Language?): StringClass() {
-    override fun getStrings(): FallBackStringsInterface {
-        return when(language){
-            Language.DUTCH -> FallbackStringsDutch()
-            else -> FallbackStringsEnglish()
-        }
+fun Furhat.getFallBackStateStrings(): FallBackStringsInterface {
+    return when(voice.language){
+        Language.DUTCH -> FallbackStringsDutch()
+        else -> FallbackStringsEnglish()
     }
 }
