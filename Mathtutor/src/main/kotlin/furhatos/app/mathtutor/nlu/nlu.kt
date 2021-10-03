@@ -51,3 +51,43 @@ class Subjectname : Intent(){
         )
     }
 }
+
+class TrainingMode : EnumEntity(){
+    override fun getEnum(lang: Language): List<String> {
+        return listOf("test", "question", "example", "explanation")
+    }
+}
+
+class Mode : Intent(){
+    var trainingmode : TrainingMode? = null
+    override fun getExamples(lang: Language): List<String> {
+        return listOf(
+            "@trainingmode please",
+            "I would like to do a @trainingmode",
+            "I would like to do an @trainingmode",
+            "I would like a @trainingmode",
+            "I would like an @trainingmode",
+            "@trainingmode",
+            "@trainingmode me",
+            "Give me a @trainingmode, please",
+            "Give me a @trainingmode",
+            "I want a @trainingmode",
+            "I want a @trainingmode, please"
+        )
+    }
+}
+
+class QuestionAnswer: Intent(){
+    var givenanswer: Number? = null
+    var divisor: Number? = null
+    override fun getExamples(lang: Language): List<String> {
+        return listOf(
+            "@givenanswer",
+            "the answer is @givenanswer",
+            "@givenanswer percent",
+            "the answer is @givenanswer percent",
+            "@givenanswer above @divisor",
+            "the answer is @givenanswer above @divisor"
+        )
+    }
+}
