@@ -48,7 +48,7 @@ val Subject: State = state(Interaction) {
 
 val GiveTrainingMode: State = state(Interaction) {
     onEntry {
-        furhat.ask("Would you like to do a test, practice an example together, get some explanation or try one question?")
+        furhat.ask("Would you like to do a test, practice an example together, get some explanation or try one question? You can also go back to the subject selection if you want.")
     }
     this.onResponse<Mode> {
         val modeanswer = it.intent.trainingmode.toString()
@@ -65,6 +65,9 @@ val GiveTrainingMode: State = state(Interaction) {
             furhat.say("I'm sorry, I didn't understand you, can you repeat what you want to do?")
             reentry()
         }
+    }
+    this.onResponse<Back>{
+        goto(Subject)
     }
 }
 
