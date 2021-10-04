@@ -1,9 +1,21 @@
 package furhatos.app.mathtutor.flow
 
+import furhatos.app.mathtutor.nlu.*
+import furhatos.app.mathtutor.object_classes.UserName
+import furhatos.app.mathtutor.object_classes.userName
 import furhatos.flow.kotlin.State
 import furhatos.flow.kotlin.state
+import furhatos.flow.kotlin.*
+import furhatos.gestures.Gestures
 
-val Start: State = state {
+val Start: State = state(Interaction) {
+    onEntry {
+        furhat.ask("Hello, I'm your mathtutor, what's your name?")
+    }
+    onReentry {
+        furhat.ask("Can you please repeat your name?")
+    }
+
     this.onResponse<Name> {
         val name = it.intent.name
         users.current.userName.name = name
