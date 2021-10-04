@@ -92,3 +92,17 @@ class QuestionAnswer: Intent(){
         )
     }
 }
+
+class Back : Intent(){
+    override fun getExamples(lang: Language): List<String> {
+        return listOf(
+            "Go back please",
+            "I would like to go back",
+            "I would like to go to subject selection",
+            "Go back",
+            "Back",
+            "Subject selection",
+            "@trainingmode me"
+        )
+    }
+}
