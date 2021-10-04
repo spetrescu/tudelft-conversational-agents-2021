@@ -1,5 +1,6 @@
 package furhatos.app.mathtutor.nlu
 
+import furhatos.nlu.EnumEntity
 import furhatos.nlu.Intent
 import furhatos.util.Language
 import furhatos.nlu.common.Number
