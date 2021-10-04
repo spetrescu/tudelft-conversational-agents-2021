@@ -8,9 +8,11 @@ import furhatos.app.mathtutor.object_classes.Subject
 import furhatos.app.mathtutor.object_classes.TrainingMode
 import furhatos.flow.kotlin.*
 import furhatos.gestures.Gestures
+import furhatos.util.*
 
 var currentsubject = Subject()
 var currentMode = TrainingMode()
+
 
 
 val Interaction: State = state(FallBackState) {
