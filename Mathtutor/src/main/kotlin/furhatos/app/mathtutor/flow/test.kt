@@ -66,13 +66,12 @@ val test: State = state(Interaction) {
 
     this.onReentry {
         val currentQuestion = quiz?.getQuestions()?.get(questionNumber)
-        furhat.askFor<AnswerIntent>("${furhat.getTestStrings().whatIs} ${currentQuestion}?") {
-            this.onResponse<AnswerIntent> {
-                println(it.text.toString())
+        furhat.ask("${furhat.getTestStrings().whatIs} ${currentQuestion}?")
+    }
 
-            }
-        }
-        questionNumber++
+    this.onResponse<AnswerIntent> {
+        println(it.text.toString())
+        questionNumber += 1
         if (questionNumber >= quiz?.getQuestions()?.size!!) {
             terminate()
         } else {
