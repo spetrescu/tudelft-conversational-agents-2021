@@ -16,7 +16,7 @@ val Start: State = state(Interaction) {
         furhat.ask("Can you please repeat your name?")
     }
 
-    onResponse<Name> {
+    this.onResponse<Name> {
         val name = it.intent.name
         users.current.userName.name = name
         val confirm = furhat.askYN("So, your name is " + it.intent.name +", is that correct?")

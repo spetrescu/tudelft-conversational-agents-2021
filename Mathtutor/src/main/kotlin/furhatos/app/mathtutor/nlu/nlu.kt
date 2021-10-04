@@ -5,6 +5,7 @@ import furhatos.nlu.EnumEntity
 import furhatos.nlu.Intent
 import furhatos.nlu.common.PersonName
 import furhatos.util.Language
+import furhatos.nlu.common.Number
 
 
 // Wtf is going on intent
@@ -78,8 +79,8 @@ class Mode : Intent(){
 }
 
 class QuestionAnswer: Intent(){
-    var givenanswer: Number? = null
-    var divisor: Number? = null
+    var givenanswer: Number = Number(1)
+    var divisor: Number = Number(1)
     override fun getExamples(lang: Language): List<String> {
         return listOf(
             "@givenanswer",
