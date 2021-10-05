@@ -1,8 +1,6 @@
 package furhatos.app.mathtutor.flow
 
-import furhatos.app.mathtutor.assessment.quizzes.DivisionQuiz
-import furhatos.app.mathtutor.assessment.quizzes.MultiplicationQuiz
-import furhatos.app.mathtutor.assessment.quizzes.Quiz
+import furhatos.app.mathtutor.assessment.quizzes.*
 import furhatos.app.mathtutor.nlu.*
 import furhatos.app.mathtutor.object_classes.Subject
 import furhatos.app.mathtutor.object_classes.TrainingMode
@@ -19,10 +17,6 @@ fun obtainNumberOfQuestions(): State = state(Interaction) {
 
     this.onEntry {
         furhat.ask(furhat.getTestStrings().askNoOfQuestions)
-    }
-
-    this.onReentry {
-
     }
 
     this.onResponse<NoOfQuestionsIntent> {
@@ -54,14 +48,13 @@ fun obtainDifficultyLevel(): State = state(Interaction) {
     }
 }
 
-fun test(currentSubject: Subject, currentMode: TrainingMode): State = state(Interaction) {
+val Test: State = state(Interaction) {
     var language: Language? = null
     var noOfQuestions: Int? = null
-
     var difficultyLevel: String? = null
     var questionNumber = 0
     var quiz: Quiz? = null
-    val answers: ArrayList<Answer> = ArrayList()
+    var currentQuestion: AbstractQuestion? = null
 
     fun getSubjectQuiz(): Quiz {
         return when (currentsubject.currentSubject) {
@@ -76,21 +69,22 @@ fun test(currentSubject: Subject, currentMode: TrainingMode): State = state(Inte
 
     this.onEntry {
         furhat.say(furhat.getTestStrings().welcome)
+        language = furhat.voice.language
         noOfQuestions = call(obtainNumberOfQuestions()) as Int
         difficultyLevel = call(obtainDifficultyLevel()) as String
         furhat.ask(furhat.getTestStrings().askToStartTest)
     }
 
     this.onReentry {
-        val currentQuestion = quiz?.questions?.get(questionNumber)
+        currentQuestion = quiz?.questions?.get(questionNumber)
         furhat.ask("${furhat.getTestStrings().whatIs} ${currentQuestion}?")
     }
 
     this.onResponse<AnswerIntent> {
-        answers.add(Answer(it.intent.answer.get("value") as Int))
+        currentQuestion?.userAnswer = Answer(it.intent.answer.get("value") as Int)
         questionNumber += 1
         if (questionNumber >= noOfQuestions!!) {
-            terminate()
+            goto(grade(quiz!!.questions))
         } else {
             reentry()
         }

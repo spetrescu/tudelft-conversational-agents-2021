@@ -9,11 +9,11 @@ class MultiplicationQuiz(
     override val difficulty: String,
     override val previousResults: ArrayList<Result>?
 ) : AbstractQuiz() {
-    override val questions: ArrayList<Question> = generateQuestions()
+    override val questions: ArrayList<AbstractQuestion> = generateQuestions()
 
 
-    override fun generateQuestions(): ArrayList<Question> {
-        val questionsArray: ArrayList<Question> = ArrayList(noOfQuestions)
+    override fun generateQuestions(): ArrayList<AbstractQuestion> {
+        val questionsArray: ArrayList<AbstractQuestion> = ArrayList(noOfQuestions)
         (0 until noOfQuestions).forEach { _ ->
             questionsArray.add(
                 MultiplicationQuestion(
@@ -26,9 +26,9 @@ class MultiplicationQuiz(
         return questionsArray
     }
 
-    override fun generateQuestions(seed: Int): ArrayList<Question> {
+    override fun generateQuestions(seed: Int): ArrayList<AbstractQuestion> {
         val randomGenerator = Random(seed)
-        val questionsArray: ArrayList<Question> = ArrayList(noOfQuestions)
+        val questionsArray: ArrayList<AbstractQuestion> = ArrayList(noOfQuestions)
         (0 until noOfQuestions).forEach { _ ->
             questionsArray.add(
                 MultiplicationQuestion(

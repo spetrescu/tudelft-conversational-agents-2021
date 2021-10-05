@@ -57,7 +57,7 @@ val GiveTrainingMode: State = state(Interaction) {
         val answeredMode = it.intent.trainingmode.toString()
         currentMode.currentMode = answeredMode
         when (answeredMode) {
-            "test" -> goto(test(currentsubject, currentMode))
+            "test" -> goto(Test)
             "question" -> goto(Questions)
             "example" -> goto(Examples)
             "explanation" -> goto(Explanation)

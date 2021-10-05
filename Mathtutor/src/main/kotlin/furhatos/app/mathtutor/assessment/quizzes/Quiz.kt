@@ -8,9 +8,9 @@ interface Quiz {
     val noOfQuestions: Int
     val difficulty: String
     val previousResults: ArrayList<Result>?
-    val questions: ArrayList<Question>
-    fun generateQuestions(): ArrayList<Question>
-    fun generateQuestions(seed: Int): ArrayList<Question>
+    val questions: ArrayList<AbstractQuestion>
+    fun generateQuestions(): ArrayList<AbstractQuestion>
+    fun generateQuestions(seed: Int): ArrayList<AbstractQuestion>
 }
 
 abstract class AbstractQuiz: Quiz {

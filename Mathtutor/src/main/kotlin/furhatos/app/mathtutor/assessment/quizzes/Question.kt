@@ -1,5 +1,6 @@
 package furhatos.app.mathtutor.assessment.quizzes
 
+import furhatos.app.mathtutor.flow.Answer
 import furhatos.app.mathtutor.strings.getTestStrings
 import furhatos.util.Language
 
@@ -10,8 +11,12 @@ interface Question {
     fun getCorrectAnswer(): Int
 }
 
+abstract class AbstractQuestion: Question {
+    var userAnswer: Answer? = null
+}
+
 class PercentageQuestion(override val operandOne: Int, override val operandTwo: Int, override val language: Language) :
-    Question {
+    AbstractQuestion() {
     override fun getCorrectAnswer(): Int {
         return operandOne + operandTwo
     }
@@ -36,7 +41,8 @@ class MultiplicationQuestion(
     override val operandOne: Int,
     override val operandTwo: Int,
     override val language: Language
-) : Question {
+) : AbstractQuestion() {
+
     override fun getCorrectAnswer(): Int {
         return operandOne * operandTwo
     }
@@ -47,7 +53,8 @@ class MultiplicationQuestion(
 }
 
 class DivisionQuestion(override val operandOne: Int, override val operandTwo: Int, override val language: Language) :
-    Question {
+    AbstractQuestion() {
+
     override fun getCorrectAnswer(): Int {
         return operandOne / operandTwo // Integer division
     }
