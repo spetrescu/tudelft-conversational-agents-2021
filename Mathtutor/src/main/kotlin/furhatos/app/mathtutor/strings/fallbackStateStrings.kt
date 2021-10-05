@@ -3,7 +3,7 @@ package furhatos.app.mathtutor.strings
 import furhatos.flow.kotlin.Furhat
 import furhatos.util.Language
 
-interface FallBackStringsInterface: DataStringInterface {
+interface FallBackStrings: DataString {
     val onResponseFirstResponse: String
     val onResponseOtherResponses: Array<String>
     val onNoResponseFirstResponse: String
@@ -11,7 +11,7 @@ interface FallBackStringsInterface: DataStringInterface {
     val onResponseFailedResponse: String
 }
 
-class FallbackStringsEnglish: FallBackStringsInterface {
+class FallbackStringsEnglish: FallBackStrings {
     override val onResponseFirstResponse = "Sorry, I did not quite get that."
     override val onResponseOtherResponses: Array<String> = arrayOf(
         "I'm sorry, I still could not catch that.",
@@ -28,7 +28,7 @@ class FallbackStringsEnglish: FallBackStringsInterface {
     override val onResponseFailedResponse = "My apologies, my speech recognizer is out of order. Please try again soon."
 }
 
-class FallbackStringsDutch: FallBackStringsInterface {
+class FallbackStringsDutch: FallBackStrings {
     override val onResponseFirstResponse = "Sorry dat begreep ik niet helemaal."
     override val onResponseOtherResponses: Array<String> = arrayOf(
         "Het spijt me, dat heb ik niet kunnen opvangen.",
@@ -44,9 +44,13 @@ class FallbackStringsDutch: FallBackStringsInterface {
     override val onResponseFailedResponse = "Mijn excuses, mijn spraakherkenning is buiten gebruik. Probeer het later opnieuw."
 }
 
-fun Furhat.getFallBackStateStrings(): FallBackStringsInterface {
-    return when(voice.language){
+fun getFallBackStateStrings(language: Language): FallBackStrings {
+    return when(language){
         Language.DUTCH -> FallbackStringsDutch()
         else -> FallbackStringsEnglish()
     }
+}
+
+fun Furhat.getFallBackStateStrings(): FallBackStrings {
+    return getFallBackStateStrings(voice.language!!)
 }

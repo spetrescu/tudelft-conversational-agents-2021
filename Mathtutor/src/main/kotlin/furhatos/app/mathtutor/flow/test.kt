@@ -1,11 +1,11 @@
 package furhatos.app.mathtutor.flow
 
-import furhatos.app.mathtutor.assessment.MultiplicationQuiz
-import furhatos.app.mathtutor.assessment.Quiz
-import furhatos.app.mathtutor.nlu.AnswerIntent
-import furhatos.app.mathtutor.nlu.DifficultyLevel
-import furhatos.app.mathtutor.nlu.NoIdeaIntent
-import furhatos.app.mathtutor.nlu.NoOfQuestionsIntent
+import furhatos.app.mathtutor.assessment.quizzes.DivisionQuiz
+import furhatos.app.mathtutor.assessment.quizzes.MultiplicationQuiz
+import furhatos.app.mathtutor.assessment.quizzes.Quiz
+import furhatos.app.mathtutor.nlu.*
+import furhatos.app.mathtutor.object_classes.Subject
+import furhatos.app.mathtutor.object_classes.TrainingMode
 import furhatos.app.mathtutor.strings.getTestStrings
 import furhatos.flow.kotlin.State
 import furhatos.flow.kotlin.furhat
@@ -21,8 +21,13 @@ fun obtainNumberOfQuestions(): State = state(Interaction) {
         furhat.ask(furhat.getTestStrings().askNoOfQuestions)
     }
 
+    this.onReentry {
+
+    }
+
     this.onResponse<NoOfQuestionsIntent> {
         noOfQuestions = it.intent.numberOfQuestions.getInteger("value")
+
         furhat.say(furhat.getTestStrings().confirmNoOfQuestion(noOfQuestions))
         terminate(noOfQuestions)
     }
@@ -49,15 +54,27 @@ fun obtainDifficultyLevel(): State = state(Interaction) {
     }
 }
 
-val test: State = state(Interaction) {
+fun test(currentSubject: Subject, currentMode: TrainingMode): State = state(Interaction) {
     var language: Language? = null
     var noOfQuestions: Int? = null
+
     var difficultyLevel: String? = null
     var questionNumber = 0
     var quiz: Quiz? = null
+    val answers: ArrayList<Answer> = ArrayList()
+
+    fun getSubjectQuiz(): Quiz {
+        return when (currentsubject.currentSubject) {
+            "multiplication" -> MultiplicationQuiz(language!!, noOfQuestions!!, difficultyLevel!!, null)
+            "division" -> DivisionQuiz(language!!, noOfQuestions!!, difficultyLevel!!, null)
+//            "percentages" ->
+//            "fractions" ->
+            else -> throw Error("Subject has not been chosen!")
+        }
+    }
+
 
     this.onEntry {
-        language = furhat.voice.language!!
         furhat.say(furhat.getTestStrings().welcome)
         noOfQuestions = call(obtainNumberOfQuestions()) as Int
         difficultyLevel = call(obtainDifficultyLevel()) as String
@@ -65,14 +82,14 @@ val test: State = state(Interaction) {
     }
 
     this.onReentry {
-        val currentQuestion = quiz?.getQuestions()?.get(questionNumber)
+        val currentQuestion = quiz?.questions?.get(questionNumber)
         furhat.ask("${furhat.getTestStrings().whatIs} ${currentQuestion}?")
     }
 
     this.onResponse<AnswerIntent> {
-        println(it.text.toString())
+        answers.add(Answer(it.intent.answer.get("value") as Int))
         questionNumber += 1
-        if (questionNumber >= quiz?.getQuestions()?.size!!) {
+        if (questionNumber >= noOfQuestions!!) {
             terminate()
         } else {
             reentry()
@@ -81,7 +98,7 @@ val test: State = state(Interaction) {
 
     this.onResponse<Yes> {
         furhat.say(furhat.getTestStrings().testStarts)
-        quiz = MultiplicationQuiz(language!!, noOfQuestions!!, difficultyLevel!!, null)
+        quiz = MultiplicationQuiz(furhat.voice.language!!, noOfQuestions!!, difficultyLevel!!, null)
         furhat.say(furhat.getTestStrings().solveExercises)
         reentry()
     }

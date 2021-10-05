@@ -3,7 +3,7 @@ package furhatos.app.mathtutor.strings
 import furhatos.flow.kotlin.Furhat
 import furhatos.util.Language
 
-interface TestStringsInterface : DataStringInterface {
+interface TestStrings : DataString {
     val welcome: String
     val solveExercises: String
     val askNoOfQuestions: String
@@ -20,7 +20,7 @@ interface TestStringsInterface : DataStringInterface {
     val whatIs: String
 }
 
-class TestStringsEnglish : TestStringsInterface {
+class TestStringsEnglish : TestStrings {
     override val welcome = "Welcome to your test."
     override val solveExercises: String = "Please solve the following exercises:"
     override val askNoOfQuestions: String
@@ -61,7 +61,7 @@ class TestStringsEnglish : TestStringsInterface {
         get() = "What is "
 }
 
-class TestStringsDutch : TestStringsInterface {
+class TestStringsDutch : TestStrings {
     override val welcome = "Welkom bij jouw toets:"
     override val solveExercises: String
         get() = "Los de volgende opgaven op:"
@@ -102,7 +102,7 @@ class TestStringsDutch : TestStringsInterface {
 
 }
 
-fun getTestStrings(language: Language): TestStringsInterface {
+fun getTestStrings(language: Language): TestStrings {
     return when (language) {
         Language.DUTCH -> TestStringsDutch()
         else -> TestStringsEnglish()
@@ -110,7 +110,7 @@ fun getTestStrings(language: Language): TestStringsInterface {
 }
 
 
-fun Furhat.getTestStrings(): TestStringsInterface {
+fun Furhat.getTestStrings(): TestStrings {
     return when (voice.language) {
         Language.DUTCH -> TestStringsDutch()
         else -> TestStringsEnglish()
