@@ -15,6 +15,7 @@ class NoOfQuestionsIntent(
                 "@numberOfQuestions alsjeblieft"
             )
             else -> listOf<String>(
+                "@numberOfQuestions",
                 "I would like to have @numberOfQuestions",
                 "@numberOfQuestions questions please",
                 "@numberOfQuestions please",

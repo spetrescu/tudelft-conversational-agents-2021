@@ -18,11 +18,14 @@ abstract class AbstractQuestion: Question {
 class PercentageQuestion(override val operandOne: Int, override val operandTwo: Int, override val language: Language) :
     AbstractQuestion() {
     override fun getCorrectAnswer(): Int {
-        return operandOne + operandTwo
+        return operandOne / 100 * operandTwo
     }
 
     override fun toString(): String {
-        return "$operandOne ${getTestStrings(language).addition} $operandTwo"
+        return when(language) {
+            Language.DUTCH -> "Wat is $operandOne% van $operandTwo?"
+            else -> "What is $operandOne% of $operandTwo?"
+        }
     }
 }
 

@@ -21,6 +21,7 @@ class Name(
     var name: PersonName? = null
     override fun getExamples(lang: Language): List<String> {
         return listOf(
+            "@name",
             "My name is @name.",
             "I am @name",
             "I'm @name",

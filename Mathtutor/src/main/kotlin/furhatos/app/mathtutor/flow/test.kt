@@ -60,7 +60,8 @@ val Test: State = state(Interaction) {
         return when (currentsubject.currentSubject) {
             "multiplication" -> MultiplicationQuiz(language!!, noOfQuestions!!, difficultyLevel!!, null)
             "division" -> DivisionQuiz(language!!, noOfQuestions!!, difficultyLevel!!, null)
-//            "percentages" ->
+            // TODO: add percentages and fraction quiz
+            // "percentages" ->
 //            "fractions" ->
             else -> throw Error("Subject has not been chosen!")
         }
