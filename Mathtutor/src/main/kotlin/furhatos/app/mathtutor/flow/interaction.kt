@@ -8,7 +8,6 @@ import furhatos.app.mathtutor.object_classes.Subject
 import furhatos.app.mathtutor.object_classes.TrainingMode
 import furhatos.flow.kotlin.*
 import furhatos.gestures.Gestures
-import furhatos.util.*
 
 var currentsubject = Subject()
 var currentMode = TrainingMode()
@@ -16,7 +15,6 @@ var currentMode = TrainingMode()
 
 
 val Interaction: State = state(FallBackState) {
-
     onUserLeave(instant = true) {
         if (users.count > 0) {
             if (it == users.current) {
@@ -42,36 +40,33 @@ val Subject: State = state(Interaction) {
         furhat.ask("What subject would you like to practice? You can choose between ${Subjectlist().getEnum(furhat.voice.language!!)}")
     }
     this.onResponse<Subjectname> {
-        val subjectanswer = it.intent.subject
-        currentsubject.currentSubject = subjectanswer.toString()
+        val answeredSubject = it.intent.subject
+        currentsubject.currentSubject = answeredSubject.toString()
         goto(GiveTrainingMode)
     }
 }
 
 val GiveTrainingMode: State = state(Interaction) {
     onEntry {
-        furhat.ask("Would you like to do a test, practice an example together, get some explanation or try one question?")
+        furhat.ask(
+            "Would you like to do a test, practice an example together, get some explanation or try one question?" +
+                    " You can also go back to the subject selection if you want."
+        )
     }
     this.onResponse<Mode> {
-        val modeanswer = it.intent.trainingmode.toString()
-        currentMode.currentMode = modeanswer
-        if (modeanswer == "test") {
-            goto(Test)
-        } else if (modeanswer == "question") {
-            goto(Questions)
-        } else if (modeanswer == "example") {
-            goto(Examples)
-        } else if (modeanswer == "explanation") {
-            goto(Explanation)
-        } else {
-            furhat.say("I'm sorry, I didn't understand you, can you repeat what you want to do?")
-            reentry()
+        val answeredMode = it.intent.trainingmode.toString()
+        currentMode.currentMode = answeredMode
+        when (answeredMode) {
+            "test" -> goto(Test)
+            "question" -> goto(Questions)
+            "example" -> goto(Examples)
+            "explanation" -> goto(Explanation)
+            else -> {
+                furhat.say("I'm sorry, I didn't understand you, can you repeat what you want to do?")
+                reentry()
+            }
         }
     }
-}
-
-val Test: State = state(Interaction) {
-    //todo: to be implemented by Rohan
 }
 
 val Questions: State = state(Interaction) {
@@ -93,20 +88,18 @@ val Questions: State = state(Interaction) {
     val answerf = firstfraction + secondfraction
     onEntry {
         furhat.say("Let me give you a question!")
-        if (currentsubject.currentSubject == "multiplication") {
-            furhat.ask("What is the answer to $randomFirstValue multiplied by ${randomSecondValue}?")
-        } else if (currentsubject.currentSubject == "division") {
-            furhat.ask("What is the answer to $dividend divided by $divisor?")
-        } else if (currentsubject.currentSubject == "percentages") {
-            furhat.ask("What is $number percent out of $out_of?")
-        } else if (currentsubject.currentSubject == "fractions") {
-            furhat.ask(
+        when (currentsubject.currentSubject) {
+            "multiplication" -> furhat.ask("What is the answer to $randomFirstValue multiplied by ${randomSecondValue}?")
+            "division" -> furhat.ask("What is the answer to $dividend divided by $divisor?")
+            "percentages" -> furhat.ask("What is $number percent out of $out_of?")
+            "fractions" -> furhat.ask(
                 "What is " + firstfraction.toString() + " above " + divisor.toString() + " plus" + secondfraction.toString() + "above " + divisor.toString() + "? " +
                         "Please give your answer as: number above " + divisor.toString()
             )
-        } else {
-            furhat.say("I'm sorry, the topic isn't clear to me, can you repeat it?")
-            goto(Subject)
+            else -> {
+                furhat.say("I'm sorry, the topic isn't clear to me, can you repeat it?")
+                goto(Subject)
+            }
         }
     }
 
@@ -118,7 +111,7 @@ val Questions: State = state(Interaction) {
         val confirm = furhat.askYN("So, your answer is " + it.intent.givenanswer + ", is that correct?")
 
         if (confirm == true) {
-            val correctAnswer: Int = when(currentsubject.currentSubject){
+            val correctAnswer: Int = when (currentsubject.currentSubject) {
                 "multiplication" -> answerm
                 "division" -> answerd
                 "percentages" -> answerp
@@ -127,7 +120,7 @@ val Questions: State = state(Interaction) {
             }
             val givenAnswer = it.intent.givenanswer.getInteger("value")
             val isAnswerCorrect = givenAnswer == correctAnswer
-            if(isAnswerCorrect){
+            if (isAnswerCorrect) {
                 furhat.say("Your answer " + it.intent.givenanswer + " is correct!")
             } else {
                 furhat.say("Your answer " + it.intent.givenanswer + " is wrong! The answer should have been " + correctAnswer.toString())
@@ -180,7 +173,7 @@ val Examples: State = state(Interaction) {
             "percentages" -> {
                 furhat.say {
                     +"What is $number percent out of $out_of? "
-                    + delay(3000)
+                    +delay(3000)
                     +"The answer is: $answerp"
                 }
             }
@@ -188,7 +181,7 @@ val Examples: State = state(Interaction) {
                 furhat.say {
                     +"What is $firstfraction above $divisor plus $secondfraction above $divisor? "
                     +"Please give your answer as: number above $divisor. "
-                    + delay(3000)
+                    +delay(3000)
                     +"The answer is: $answerf."
                 }
             }
