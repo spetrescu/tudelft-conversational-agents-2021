@@ -21,6 +21,7 @@ class Name(
     var name: PersonName? = null
     override fun getExamples(lang: Language): List<String> {
         return listOf(
+            "@name",
             "My name is @name.",
             "I am @name",
             "I'm @name",
@@ -103,6 +104,44 @@ class Back : Intent(){
             "Back",
             "Subject selection",
             "@trainingmode me"
+        )
+    }
+}
+
+class ExitProgram : Intent(){
+    override fun getExamples(lang: Language): List<String> {
+        return listOf(
+            "Leave please",
+            "End",
+            "I would like to go stop",
+            "Stop",
+            "Please end this",
+            "Leave",
+            "Please end",
+            "I want to leave"
+        )
+    }
+}
+
+class SayYes : Intent(){
+    override fun getExamples(lang: Language): List<String> {
+        return listOf(
+            "yes",
+            "yeah",
+            "Yes, I want to leave",
+            "I want to leave",
+            "Affirmative",
+            "Please let me leave"
+        )
+    }
+}
+
+class SayNo : Intent(){
+    override fun getExamples(lang: Language): List<String> {
+        return listOf(
+            "no",
+            "I don't",
+            "No, I don't"
         )
     }
 }

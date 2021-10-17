@@ -4,6 +4,11 @@ import furhatos.app.mathtutor.nlu.Mode
 import furhatos.app.mathtutor.nlu.QuestionAnswer
 import furhatos.app.mathtutor.nlu.Subjectlist
 import furhatos.app.mathtutor.nlu.Subjectname
+import furhatos.app.mathtutor.nlu.SayNo
+import furhatos.app.mathtutor.nlu.SayYes
+import furhatos.app.mathtutor.nlu.Back
+import furhatos.app.mathtutor.nlu.ExitProgram
+
 import furhatos.app.mathtutor.object_classes.Subject
 import furhatos.app.mathtutor.object_classes.TrainingMode
 import furhatos.flow.kotlin.*
@@ -35,6 +40,20 @@ val Interaction: State = state(FallBackState) {
 
 }
 
+val Leave : State = state(Interaction){
+    onEntry {
+        furhat.ask("Do you really want to stop the lesson?")
+    }
+    this.onResponse<SayYes>{
+        furhat.say("See you later!")
+        goto(Idle)
+    }
+    this.onResponse<SayNo>{
+        furhat.say("Let's get back to where we were!")
+        terminate()
+    }
+}
+
 val Subject: State = state(Interaction) {
     onEntry {
         furhat.ask("What subject would you like to practice? You can choose between ${Subjectlist().getEnum(furhat.voice.language!!)}")
@@ -43,6 +62,10 @@ val Subject: State = state(Interaction) {
         val answeredSubject = it.intent.subject
         currentsubject.currentSubject = answeredSubject.toString()
         goto(GiveTrainingMode)
+    }
+    this.onResponse<ExitProgram>{
+        call(Leave)
+        reentry()
     }
 }
 
@@ -67,7 +90,15 @@ val GiveTrainingMode: State = state(Interaction) {
             }
         }
     }
+    this.onResponse<Back>{
+        goto(Subject)
+    }
+    this.onResponse<ExitProgram>{
+        call(Leave)
+        reentry()
+    }
 }
+
 
 val Questions: State = state(Interaction) {
     val randomFirstValue = (1..10).random()
@@ -133,6 +164,11 @@ val Questions: State = state(Interaction) {
         goto(GiveTrainingMode)
     }
 
+    this.onResponse<ExitProgram>{
+        call(Leave)
+        reentry()
+    }
+
 
 }
 
@@ -191,6 +227,10 @@ val Examples: State = state(Interaction) {
             }
         }
         goto(GiveTrainingMode)
+    }
+    this.onResponse<ExitProgram>{
+        call(Leave)
+        reentry()
     }
 }
 
