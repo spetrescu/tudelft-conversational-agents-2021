@@ -7,6 +7,7 @@ import furhatos.util.Language
 interface Question {
     val operandOne: Int
     val operandTwo: Int
+    val operandThree: Int
     val language: Language
     fun getCorrectAnswer(): Int
 }
@@ -15,31 +16,13 @@ abstract class AbstractQuestion: Question {
     var userAnswer: Answer? = null
 }
 
-class PercentageQuestion(override val operandOne: Int, override val operandTwo: Int, override val language: Language) :
-    AbstractQuestion() {
-    override fun getCorrectAnswer(): Int {
-        return operandOne + operandTwo
-    }
 
-    override fun toString(): String {
-        return "$operandOne ${getTestStrings(language).addition} $operandTwo"
-    }
-}
-
-class FractionQuestion(override val operandOne: Int, override val operandTwo: Int, override val language: Language) :
-    Question {
-    override fun getCorrectAnswer(): Int {
-        return operandOne - operandTwo
-    }
-
-    override fun toString(): String {
-        return "$operandOne ${getTestStrings(language).subtraction} $operandTwo"
-    }
-}
 
 class MultiplicationQuestion(
     override val operandOne: Int,
     override val operandTwo: Int,
+    null
+    ,
     override val language: Language
 ) : AbstractQuestion() {
 
@@ -52,7 +35,7 @@ class MultiplicationQuestion(
     }
 }
 
-class DivisionQuestion(override val operandOne: Int, override val operandTwo: Int, override val language: Language) :
+class DivisionQuestion(override val operandOne: Int, override val operandTwo: Int, null, override val language: Language) :
     AbstractQuestion() {
 
     override fun getCorrectAnswer(): Int {
@@ -61,5 +44,29 @@ class DivisionQuestion(override val operandOne: Int, override val operandTwo: In
 
     override fun toString(): String {
         return "$operandOne ${getTestStrings(language).division} $operandTwo"
+    }
+}
+
+class PercentagesQuestion(override val operandOne: Int, override val operandTwo: Int, null, override val language: Language) :
+    AbstractQuestion() {
+
+    override fun getCorrectAnswer(): Int {
+        return operandOne / operandTwo * 100 // Integer division
+    }
+
+    override fun toString(): String {
+        return "$operandOne ${getTestStrings(language).percentages} $operandTwo"
+    }
+}
+
+class FractionsQuestion(override val operandOne: Int, override val operandTwo: Int, override operandThree: Int, override val language: Language) :
+    AbstractQuestion() {
+
+    override fun getCorrectAnswer(): Int {
+        return operandOne + operandTwo // Integer division
+    }
+
+    override fun toString(): String {
+        return "$operandOne above $operandThree ${getTestStrings(language).percentages} $operandTwo above $operandThree"
     }
 }
