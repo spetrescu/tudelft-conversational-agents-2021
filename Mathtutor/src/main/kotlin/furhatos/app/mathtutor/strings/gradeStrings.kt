@@ -6,7 +6,7 @@ import furhatos.util.Language
 interface GradeStrings {
     val finishTest: String
     val checkingAnswers: String
-    fun yourScoreIs(actualScore: Long): String
+    fun yourScoreIs(actualScore: Any?): String
 }
 
 class GradeStringsEnglish: GradeStrings {
@@ -14,7 +14,9 @@ class GradeStringsEnglish: GradeStrings {
         get() = "Your test has finished"
     override val checkingAnswers: String
         get() = "Checking your answers..."
-    override fun yourScoreIs(actualScore: Long): String = "Your score is a ${"%.1f".format(actualScore)} out of 10."
+    override fun yourScoreIs(actualScore: Any?): String {
+        return "Your score is a $actualScore out of 10."
+    }
 }
 
 class GradeStringsDutch: GradeStrings {
@@ -22,8 +24,7 @@ class GradeStringsDutch: GradeStrings {
         get() = "Jouw toets is afgelopen."
     override val checkingAnswers: String
         get() = "Antwoorden nakijken..."
-
-    override fun yourScoreIs(actualScore: Long): String {
+    override fun yourScoreIs(actualScore: Any?): String {
         return "Jouw cijfer is een ${"%.1f".format(actualScore)}."
     }
 }
