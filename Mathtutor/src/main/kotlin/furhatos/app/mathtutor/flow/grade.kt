@@ -6,6 +6,7 @@ import furhatos.app.mathtutor.strings.getGradeStrings
 import furhatos.flow.kotlin.State
 import furhatos.flow.kotlin.furhat
 import furhatos.flow.kotlin.state
+import furhatos.gestures.Gestures
 
 fun grade(questions: ArrayList<AbstractQuestion>): State = state {
     fun gradeCalculation(noOfCorrectlyAnsweredQuestions: Int, noOfQuestions: Int): Long =
