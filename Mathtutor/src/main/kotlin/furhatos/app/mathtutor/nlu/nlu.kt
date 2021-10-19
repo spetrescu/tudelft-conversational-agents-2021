@@ -56,7 +56,7 @@ class Subjectname : Intent(){
 
 class TrainingMode : EnumEntity(){
     override fun getEnum(lang: Language): List<String> {
-        return listOf("test", "question", "example", "explanation")
+        return listOf("test", "question", "example", "explanation", "subject")
     }
 }
 

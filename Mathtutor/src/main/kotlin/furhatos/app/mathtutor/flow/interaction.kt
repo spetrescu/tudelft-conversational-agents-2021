@@ -1,5 +1,7 @@
 package furhatos.app.mathtutor.flow
 
+import furhatos.app.mathtutor.gaze.ConvMode
+import furhatos.app.mathtutor.gaze.gazing
 import furhatos.app.mathtutor.nlu.Mode
 import furhatos.app.mathtutor.nlu.QuestionAnswer
 import furhatos.app.mathtutor.nlu.Subjectlist
@@ -13,7 +15,6 @@ var currentsubject = Subject()
 var currentMode = TrainingMode()
 
 
-
 val Interaction: State = state(FallBackState) {
     onUserLeave(instant = true) {
         if (users.count > 0) {
@@ -21,6 +22,7 @@ val Interaction: State = state(FallBackState) {
                 furhat.attend(users.other)
                 goto(Start)
             } else {
+                furhat.gazing(ConvMode.INTIMACY)
                 furhat.say("Bye bye, see you later")
                 furhat.glance(it)
             }
@@ -30,6 +32,7 @@ val Interaction: State = state(FallBackState) {
     }
 
     onUserEnter(instant = true) {
+        furhat.gazing(ConvMode.INTIMACY)
         furhat.glance(it)
     }
 
@@ -37,7 +40,9 @@ val Interaction: State = state(FallBackState) {
 
 val Subject: State = state(Interaction) {
     onEntry {
+        furhat.gazing(ConvMode.TURNTAKING)
         furhat.ask("What subject would you like to practice? You can choose between ${Subjectlist().getEnum(furhat.voice.language!!)}")
+
     }
     this.onResponse<Subjectname> {
         val answeredSubject = it.intent.subject
@@ -48,10 +53,12 @@ val Subject: State = state(Interaction) {
 
 val GiveTrainingMode: State = state(Interaction) {
     onEntry {
+        furhat.gazing(ConvMode.TURNTAKING)
         furhat.ask(
             "Would you like to do a test, practice an example together, get some explanation or try one question?" +
                     " You can also go back to the subject selection if you want."
         )
+
     }
     this.onResponse<Mode> {
         val answeredMode = it.intent.trainingmode.toString()
@@ -61,7 +68,9 @@ val GiveTrainingMode: State = state(Interaction) {
             "question" -> goto(Questions)
             "example" -> goto(Examples)
             "explanation" -> goto(Explanation)
+            "subject" -> goto(Subject)
             else -> {
+                furhat.gazing(ConvMode.INTIMACY)
                 furhat.say("I'm sorry, I didn't understand you, can you repeat what you want to do?")
                 reentry()
             }
@@ -87,7 +96,9 @@ val Questions: State = state(Interaction) {
     val answerd = randomSecondValue
     val answerf = firstfraction + secondfraction
     onEntry {
+        furhat.gazing(ConvMode.INTIMACY)
         furhat.say("Let me give you a question!")
+        furhat.gazing(ConvMode.COGNITIVE)
         when (currentsubject.currentSubject) {
             "multiplication" -> furhat.ask("What is the answer to $randomFirstValue multiplied by ${randomSecondValue}?")
             "division" -> furhat.ask("What is the answer to $dividend divided by $divisor?")
@@ -108,6 +119,7 @@ val Questions: State = state(Interaction) {
     }
 
     this.onResponse<QuestionAnswer> {
+        furhat.gazing(ConvMode.COGNITIVE)
         val confirm = furhat.askYN("So, your answer is " + it.intent.givenanswer + ", is that correct?")
 
         if (confirm == true) {
@@ -121,8 +133,10 @@ val Questions: State = state(Interaction) {
             val givenAnswer = it.intent.givenanswer.getInteger("value")
             val isAnswerCorrect = givenAnswer == correctAnswer
             if (isAnswerCorrect) {
+                furhat.gazing(ConvMode.INTIMACY)
                 furhat.say("Your answer " + it.intent.givenanswer + " is correct!")
             } else {
+                furhat.gazing(ConvMode.INTIMACY)
                 furhat.say("Your answer " + it.intent.givenanswer + " is wrong! The answer should have been " + correctAnswer.toString())
             }
         } else {
@@ -200,12 +214,14 @@ val Explanation: State = state(Interaction) {
         //todo: get better explanations as these are too basic
         when (currentsubject.currentSubject) {
             "multiplication" -> {
+                furhat.gazing(ConvMode.COGNITIVE)
                 furhat.say(
                     "The basic idea of multiplication is repeated addition. For example: 5 × 3 = 5 + 5 + 5 = 15." +
                             "We use the × symbol to mean multiply"
                 )
             }
             "division" -> {
+                furhat.gazing(ConvMode.COGNITIVE)
                 furhat.say(
                     "Division is splitting into equal parts or groups. It is the result of fair sharing. " +
                             "For example: there are 12 chocolates, and 3 friends want to share them, how do they divide the chocolates?" +
@@ -214,15 +230,16 @@ val Explanation: State = state(Interaction) {
                 )
             }
             "percentages" -> {
+                furhat.gazing(ConvMode.COGNITIVE)
                 furhat.say(
                     "A percentage means parts per 100" +
                             "The symbol is %" +
                             "For example: 25% means 25 per 100" +
                             "Let's do another example: 10% means 10 out of every 100. So if 10% of 500 people have ice cream, then 50 people have ice cream."
                 )
-
             }
             "fractions" -> {
+                furhat.gazing(ConvMode.COGNITIVE)
                 furhat.say(
                     "A fraction is how many parts of a whole:" +
                             "the top number (the numerator) says how many parts we have." +
@@ -230,6 +247,7 @@ val Explanation: State = state(Interaction) {
                 )
             }
             else -> {
+                furhat.gazing(ConvMode.INTIMACY)
                 furhat.say("I'm sorry, the topic isn't clear to me, can you repeat it?")
                 goto(Subject)
             }
