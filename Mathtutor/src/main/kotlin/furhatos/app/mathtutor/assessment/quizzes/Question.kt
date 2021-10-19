@@ -21,8 +21,7 @@ abstract class AbstractQuestion: Question {
 class MultiplicationQuestion(
     override val operandOne: Int,
     override val operandTwo: Int,
-    null
-    ,
+    override val operandThree: Int,
     override val language: Language
 ) : AbstractQuestion() {
 
@@ -35,7 +34,7 @@ class MultiplicationQuestion(
     }
 }
 
-class DivisionQuestion(override val operandOne: Int, override val operandTwo: Int, null, override val language: Language) :
+class DivisionQuestion(override val operandOne: Int, override val operandTwo: Int, override val operandThree: Int, override val language: Language) :
     AbstractQuestion() {
 
     override fun getCorrectAnswer(): Int {
@@ -47,7 +46,7 @@ class DivisionQuestion(override val operandOne: Int, override val operandTwo: In
     }
 }
 
-class PercentagesQuestion(override val operandOne: Int, override val operandTwo: Int, null, override val language: Language) :
+class PercentagesQuestion(override val operandOne: Int, override val operandTwo: Int, override val operandThree: Int, override val language: Language) :
     AbstractQuestion() {
 
     override fun getCorrectAnswer(): Int {
@@ -59,7 +58,7 @@ class PercentagesQuestion(override val operandOne: Int, override val operandTwo:
     }
 }
 
-class FractionsQuestion(override val operandOne: Int, override val operandTwo: Int, override operandThree: Int, override val language: Language) :
+class FractionsQuestion(override val operandOne: Int, override val operandTwo: Int, override val operandThree: Int, override val language: Language) :
     AbstractQuestion() {
 
     override fun getCorrectAnswer(): Int {

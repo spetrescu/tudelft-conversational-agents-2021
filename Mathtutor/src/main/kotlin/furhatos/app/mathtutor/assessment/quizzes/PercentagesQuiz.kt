@@ -22,6 +22,7 @@ class PercentagesQuiz(
                 PercentagesQuestion(
                     firstnumber,
                     factorTwo,
+                    0,
                     language
                 )
             )
@@ -40,6 +41,7 @@ class PercentagesQuiz(
                 PercentagesQuestion(
                     firstnumber,
                     factorTwo,
+                    0,
                     language
                 )
             )

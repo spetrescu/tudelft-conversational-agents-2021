@@ -23,6 +23,7 @@ class DivisionQuiz(
                 DivisionQuestion(
                     numerator,
                     denominator,
+                    0,
                     language
                 )
             )
@@ -42,6 +43,7 @@ class DivisionQuiz(
                 DivisionQuestion(
                     numerator,
                     denominator,
+                    0,
                     language
                 )
             )

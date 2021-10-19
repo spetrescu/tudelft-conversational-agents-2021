@@ -19,6 +19,7 @@ class MultiplicationQuiz(
                 MultiplicationQuestion(
                     Random.nextInt(from = 1, until = difficultyLimit),
                     Random.nextInt(from = 1, until = difficultyLimit),
+                    0,
                     language
                 )
             )
@@ -34,6 +35,7 @@ class MultiplicationQuiz(
                 MultiplicationQuestion(
                     randomGenerator.nextInt(from = 1, until = difficultyLimit),
                     randomGenerator.nextInt(from = 1, until = difficultyLimit),
+                    0,
                     language
                 )
             )

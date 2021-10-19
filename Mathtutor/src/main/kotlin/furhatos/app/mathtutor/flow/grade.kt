@@ -30,5 +30,6 @@ fun grade(questions: ArrayList<AbstractQuestion>): State = state {
         }
         delay(2500)
         furhat.say(furhat.getGradeStrings().yourScoreIs(score as Long))
+        goto(Subject)
     }
 }
