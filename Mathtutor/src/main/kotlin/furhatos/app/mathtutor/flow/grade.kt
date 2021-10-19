@@ -16,6 +16,7 @@ fun grade(questions: ArrayList<AbstractQuestion>): State = state {
         val noOfQuestions: Int = questions.size
         var correctlyAnsweredQuestions = 0
         questions.forEach { question ->
+            println("correctanswer:" + question.getCorrectAnswer() + " useranswer: " + question.userAnswer!!.answerNumber)
             if (question.getCorrectAnswer() == question.userAnswer!!.answerNumber){
                 correctlyAnsweredQuestions += 1
             }

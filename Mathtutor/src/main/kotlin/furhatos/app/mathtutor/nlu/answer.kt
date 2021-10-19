@@ -11,7 +11,8 @@ class AnswerIntent(val answer: Number = Number(1)) : Intent() {
             "@answer",
             "the answer is @answer",
             "@answer percent",
-            "@answer out of @nr"
+            "@answer out of @nr",
+            "@answer%"
         )
     }
 }

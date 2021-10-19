@@ -50,11 +50,11 @@ class PercentagesQuestion(override val operandOne: Int, override val operandTwo:
     AbstractQuestion() {
 
     override fun getCorrectAnswer(): Int {
-        return operandOne / operandTwo * 100 // Integer division
+        return operandThree // Integer division
     }
 
     override fun toString(): String {
-        return "$operandOne ${getTestStrings(language).percentages} $operandTwo"
+        return "$operandOne out of $operandTwo. How many percent is that?"
     }
 }
 
@@ -66,6 +66,6 @@ class FractionsQuestion(override val operandOne: Int, override val operandTwo: I
     }
 
     override fun toString(): String {
-        return "$operandOne above $operandThree ${getTestStrings(language).percentages} $operandTwo above $operandThree"
+        return "$operandOne above $operandThree ${getTestStrings(language).fractions} $operandTwo above $operandThree"
     }
 }

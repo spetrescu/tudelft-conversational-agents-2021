@@ -11,7 +11,6 @@ class MultiplicationQuiz(
 ) : AbstractQuiz() {
     override val questions: ArrayList<AbstractQuestion> = generateQuestions()
 
-
     override fun generateQuestions(): ArrayList<AbstractQuestion> {
         val questionsArray: ArrayList<AbstractQuestion> = ArrayList(noOfQuestions)
         (0 until noOfQuestions).forEach { _ ->

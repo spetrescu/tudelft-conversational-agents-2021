@@ -9,8 +9,7 @@ class DivisionQuiz(
     override val difficulty: String,
     override val previousResults: ArrayList<Result>?
 ) : AbstractQuiz() {
-    override val questions: ArrayList<AbstractQuestion>
-        get() = generateQuestions()
+    override val questions: ArrayList<AbstractQuestion> = generateQuestions()
 
     override fun generateQuestions(): ArrayList<AbstractQuestion> {
         val questionsArray: ArrayList<AbstractQuestion> = ArrayList(noOfQuestions)

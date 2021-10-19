@@ -34,7 +34,7 @@ class FractionsQuiz(
         val randomGenerator = Random(seed)
         val questionsArray: ArrayList<AbstractQuestion> = ArrayList(noOfQuestions)
         (0 until noOfQuestions).forEach { _ ->
-            val divisor: Int = randomGenerator.nextInt(from = 1, until = 11)
+            val divisor: Int = randomGenerator.nextInt(from = 2, until = 11)
             val factorOne: Int = randomGenerator.nextInt(from = 1, until = divisor-1)
             val factorTwo: Int = randomGenerator.nextInt(from = 1, until = divisor-1)
             questionsArray.add(

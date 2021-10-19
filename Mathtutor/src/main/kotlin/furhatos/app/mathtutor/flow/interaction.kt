@@ -122,7 +122,7 @@ val Questions: State = state(Interaction) {
         when (currentsubject.currentSubject) {
             "multiplication" -> furhat.ask("What is the answer to $randomFirstValue multiplied by ${randomSecondValue}?")
             "division" -> furhat.ask("What is the answer to $dividend divided by $divisor?")
-            "percentages" -> furhat.ask("What is $number percent out of $out_of?")
+            "percentages" -> furhat.ask("How much percent is $number out of $out_of?")
             "fractions" -> furhat.ask(
                 "What is " + firstfraction.toString() + " above " + divisor.toString() + " plus" + secondfraction.toString() + "above " + divisor.toString() + "? " +
                         "Please give your answer as: number above " + divisor.toString()
