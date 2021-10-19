@@ -30,7 +30,7 @@ fun grade(questions: ArrayList<AbstractQuestion>): State = state {
         }
         delay(2500)
         furhat.say(furhat.getGradeStrings().yourScoreIs(score as Long))
-        if(score > 6){
+        if(score >= 6){
             furhat.say("Congratulations! You passed the test")
             furhat.gesture(Gestures.BigSmile, async = true)
         }else{
