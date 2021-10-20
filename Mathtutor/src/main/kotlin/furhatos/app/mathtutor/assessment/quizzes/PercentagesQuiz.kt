@@ -3,7 +3,7 @@ package furhatos.app.mathtutor.assessment.quizzes
 import furhatos.util.Language
 import kotlin.random.Random
 
-class DivisionQuiz(
+class PercentagesQuiz(
     override val language: Language,
     override val noOfQuestions: Int,
     override val difficulty: String,
@@ -14,15 +14,14 @@ class DivisionQuiz(
     override fun generateQuestions(): ArrayList<AbstractQuestion> {
         val questionsArray: ArrayList<AbstractQuestion> = ArrayList(noOfQuestions)
         (0 until noOfQuestions).forEach { _ ->
-            val factorOne: Int = Random.nextInt(from = 1, until = difficultyLimit)
-            val factorTwo: Int = Random.nextInt(from = 1, until = difficultyLimit)
-            val numerator: Int = factorOne * factorTwo
-            val denominator: Int = listOf(factorOne, factorTwo).random()
+            val factorOne = Random.nextInt(from = 1, until = 11) * 10
+            val factorTwo: Int = Random.nextInt(from = 1, until = difficultyLimit) * 100
+            val firstnumber = factorTwo / 100 * factorOne
             questionsArray.add(
-                DivisionQuestion(
-                    numerator,
-                    denominator,
-                    0,
+                PercentagesQuestion(
+                    firstnumber,
+                    factorTwo,
+                    factorOne,
                     language
                 )
             )
@@ -34,15 +33,14 @@ class DivisionQuiz(
         val questionsArray: ArrayList<AbstractQuestion> = ArrayList(noOfQuestions)
         val randomGenerator = Random(seed)
         (0 until noOfQuestions).forEach { _ ->
-            val factorOne: Int = randomGenerator.nextInt(from = 1, until = difficultyLimit)
-            val factorTwo: Int = randomGenerator.nextInt(from = 1, until = difficultyLimit)
-            val numerator: Int = factorOne * factorTwo
-            val denominator: Int = listOf(factorOne, factorTwo).random()
+            val factorOne = randomGenerator.nextInt(from = 1, until = 11) * 10
+            val factorTwo: Int = randomGenerator.nextInt(from = 1, until = difficultyLimit) * 100
+            val firstnumber = factorTwo / 100 * factorOne
             questionsArray.add(
-                DivisionQuestion(
-                    numerator,
-                    denominator,
-                    0,
+                PercentagesQuestion(
+                    firstnumber,
+                    factorTwo,
+                    factorOne,
                     language
                 )
             )

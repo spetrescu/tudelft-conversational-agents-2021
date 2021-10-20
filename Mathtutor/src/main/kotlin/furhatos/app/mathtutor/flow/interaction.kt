@@ -1,13 +1,6 @@
 package furhatos.app.mathtutor.flow
 
-import furhatos.app.mathtutor.nlu.Mode
-import furhatos.app.mathtutor.nlu.QuestionAnswer
-import furhatos.app.mathtutor.nlu.Subjectlist
-import furhatos.app.mathtutor.nlu.Subjectname
-import furhatos.app.mathtutor.nlu.SayNo
-import furhatos.app.mathtutor.nlu.SayYes
-import furhatos.app.mathtutor.nlu.Back
-import furhatos.app.mathtutor.nlu.ExitProgram
+import furhatos.app.mathtutor.nlu.*
 
 import furhatos.app.mathtutor.object_classes.Subject
 import furhatos.app.mathtutor.object_classes.TrainingMode
@@ -116,12 +109,20 @@ val Questions: State = state(Interaction) {
     val answerm = randomFirstValue * randomSecondValue
     val answerd = randomSecondValue
     val answerf = firstfraction + secondfraction
+
+    val correctAnswer: Int = when (currentsubject.currentSubject) {
+        "multiplication" -> answerm
+        "division" -> answerd
+        "percentages" -> answerp
+        "fractions" -> answerf
+        else -> answerm
+    }
     onEntry {
         furhat.say("Let me give you a question!")
         when (currentsubject.currentSubject) {
             "multiplication" -> furhat.ask("What is the answer to $randomFirstValue multiplied by ${randomSecondValue}?")
             "division" -> furhat.ask("What is the answer to $dividend divided by $divisor?")
-            "percentages" -> furhat.ask("What is $number percent out of $out_of?")
+            "percentages" -> furhat.ask("How much percent is $number out of $out_of?")
             "fractions" -> furhat.ask(
                 "What is " + firstfraction.toString() + " above " + divisor.toString() + " plus" + secondfraction.toString() + "above " + divisor.toString() + "? " +
                         "Please give your answer as: number above " + divisor.toString()
@@ -141,13 +142,6 @@ val Questions: State = state(Interaction) {
         val confirm = furhat.askYN("So, your answer is " + it.intent.givenanswer + ", is that correct?")
 
         if (confirm == true) {
-            val correctAnswer: Int = when (currentsubject.currentSubject) {
-                "multiplication" -> answerm
-                "division" -> answerd
-                "percentages" -> answerp
-                "fractions" -> answerf
-                else -> answerm
-            }
             val givenAnswer = it.intent.givenanswer.getInteger("value")
             val isAnswerCorrect = givenAnswer == correctAnswer
             if (isAnswerCorrect) {
@@ -162,6 +156,11 @@ val Questions: State = state(Interaction) {
             furhat.say("I'm sorry, I must have misunderstood.")
             reentry()
         }
+        goto(GiveTrainingMode)
+    }
+
+    this.onResponse<DontKnow>{
+        furhat.say("You don't know? Let me help you! The correct answer is: " + correctAnswer.toString())
         goto(GiveTrainingMode)
     }
 
@@ -242,15 +241,15 @@ val Explanation: State = state(Interaction) {
         when (currentsubject.currentSubject) {
             "multiplication" -> {
                 furhat.say(
-                    "The basic idea of multiplication is repeated addition. For example: 5 × 3 = 5 + 5 + 5 = 15." +
+                    "The idea of multiplication is repeated addition. For example: 5 × 3 = 5 + 5 + 5 = 15." +
                             "We use the × symbol to mean multiply"
                 )
             }
             "division" -> {
                 furhat.say(
-                    "Division is splitting into equal parts or groups. It is the result of fair sharing. " +
-                            "For example: there are 12 chocolates, and 3 friends want to share them, how do they divide the chocolates?" +
-                            "The answer is, they should get 4 each." +
+                    "Division is splitting into equal parts or groups. You share fair among the groups. " +
+                            "For example: there are 15 chocolates, and 3 friends want to share them, how do they divide the chocolates?" +
+                            "They should get 5 each." +
                             "We use the / symbol to mean divide"
                 )
             }
@@ -267,7 +266,8 @@ val Explanation: State = state(Interaction) {
                 furhat.say(
                     "A fraction is how many parts of a whole:" +
                             "the top number (the numerator) says how many parts we have." +
-                            "the bottom number (the denominator) says how many equal parts the whole is divided into"
+                            "the bottom number (the denominator) says how many equal parts the whole is divided into."+
+                            "For example 1 above 5 plus 2 above 5 is 3 above 5 total."
                 )
             }
             else -> {

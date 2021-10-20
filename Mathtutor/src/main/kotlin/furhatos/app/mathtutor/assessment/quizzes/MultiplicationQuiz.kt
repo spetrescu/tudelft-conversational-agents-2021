@@ -11,7 +11,6 @@ class MultiplicationQuiz(
 ) : AbstractQuiz() {
     override val questions: ArrayList<AbstractQuestion> = generateQuestions()
 
-
     override fun generateQuestions(): ArrayList<AbstractQuestion> {
         val questionsArray: ArrayList<AbstractQuestion> = ArrayList(noOfQuestions)
         (0 until noOfQuestions).forEach { _ ->
@@ -19,6 +18,7 @@ class MultiplicationQuiz(
                 MultiplicationQuestion(
                     Random.nextInt(from = 1, until = difficultyLimit),
                     Random.nextInt(from = 1, until = difficultyLimit),
+                    0,
                     language
                 )
             )
@@ -34,6 +34,7 @@ class MultiplicationQuiz(
                 MultiplicationQuestion(
                     randomGenerator.nextInt(from = 1, until = difficultyLimit),
                     randomGenerator.nextInt(from = 1, until = difficultyLimit),
+                    0,
                     language
                 )
             )
