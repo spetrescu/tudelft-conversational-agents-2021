@@ -99,7 +99,6 @@ val GiveTrainingMode: State = state(Interaction) {
     }
 }
 
-
 val Questions: State = state(Interaction) {
     val randomFirstValue = (1..10).random()
     val randomSecondValue = (1..10).random()
@@ -152,8 +151,10 @@ val Questions: State = state(Interaction) {
             val givenAnswer = it.intent.givenanswer.getInteger("value")
             val isAnswerCorrect = givenAnswer == correctAnswer
             if (isAnswerCorrect) {
+                // TODO add emotion behavior
                 furhat.say("Your answer " + it.intent.givenanswer + " is correct!")
             } else {
+                // TODO add emotion behavior
                 furhat.say("Your answer " + it.intent.givenanswer + " is wrong! The answer should have been " + correctAnswer.toString())
             }
         } else {
