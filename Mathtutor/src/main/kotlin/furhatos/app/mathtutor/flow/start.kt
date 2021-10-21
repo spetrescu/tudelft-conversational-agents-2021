@@ -7,7 +7,11 @@ import furhatos.gestures.Gestures
 
 val Start: State = state(Interaction) {
     onEntry {
-        furhat.ask("Hello, I'm your mathtutor, what's your name?")
+        emotionHandler.performGesture(furhat, "Happy")
+        furhat.say("Hello!")
+        delay(500)
+        emotionHandler.performGesture(furhat, "Neutral")
+        furhat.ask("I'm your Math tutor. What's your name?")
     }
     onReentry {
         furhat.ask("Can you please repeat your name?")
@@ -21,8 +25,9 @@ val Start: State = state(Interaction) {
             furhat.gesture(Gestures.Smile, async = true)
             goto(Subject)
         } else {
-            furhat.gesture(Gestures.ExpressSad, async = true)
+            emotionHandler.performGesture(furhat, "Encouraging")
             furhat.say("I'm sorry, I must have misunderstood.")
+            emotionHandler.performGesture(furhat, "Neutral")
             reentry()
         }
     }

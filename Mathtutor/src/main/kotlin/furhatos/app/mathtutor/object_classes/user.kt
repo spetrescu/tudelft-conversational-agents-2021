@@ -8,7 +8,7 @@ class UserName(
 )
 
 class Emotion(
-    var emotion : String? = "Neutral"
+    var emotion : String = "Neutral"
 )
 
 val User.userName : UserName
