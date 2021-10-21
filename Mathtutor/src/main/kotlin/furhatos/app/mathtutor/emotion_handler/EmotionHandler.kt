@@ -38,7 +38,7 @@ val calmingGestures = listOf(Gestures.Thoughtful, Gestures.ExpressSad, Gestures.
 
 class EmotionHandler{
     // Adapted from: https://github.com/FurhatRobotics/camerafeed-demo
-    fun startEmotionHandler(furhat: Furhat, user: User) {
+    fun startEmotionHandler(user: User) {
         GlobalScope.launch {
             socket.subscribe("furhat")
             print("Connecting to server..")
@@ -47,6 +47,7 @@ class EmotionHandler{
                 val message = socket.recvStr()
                 var label = message.split(" ")[1]
                 user.currentEmotion.emotion = label
+                //logger.warn(label)
             }
         }
     }
@@ -82,7 +83,7 @@ class EmotionHandler{
             "Calming" -> {
                 furhat.gesture(calmingGestures.random(), async = true)
                 furhat.voice.pitch = "-15%"
-                furhat.voice.rate = 0.90
+                furhat.voice.rate = 0.95
                 furhat.voice.volume = "-6dB"
             }
             "Neutral" -> {
