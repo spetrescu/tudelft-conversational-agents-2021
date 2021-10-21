@@ -20,6 +20,7 @@ interface TestStrings : DataString {
     val percentages: String
     val fractions: String
     val whatIs: String
+    fun percentage(operandOne: Int, operandTwo: Int): String
 }
 
 class TestStringsEnglish : TestStrings {
@@ -29,6 +30,9 @@ class TestStringsEnglish : TestStrings {
         get() = "How many questions would you like for this test?"
 
     override fun confirmNoOfQuestion(noOfQuestion: Int): String {
+        if (noOfQuestion == 1) {
+            return "Your test will have $noOfQuestion question."
+        }
         return "Your test will have $noOfQuestion questions."
     }
 
@@ -65,6 +69,7 @@ class TestStringsEnglish : TestStrings {
         get() = "minus"
     override val whatIs: String
         get() = "What is "
+    override fun percentage(operandOne: Int, operandTwo: Int): String = "$whatIs$operandOne% of $operandTwo?"
 }
 
 class TestStringsDutch : TestStrings {
@@ -75,6 +80,9 @@ class TestStringsDutch : TestStrings {
         get() = "Hoeveel vragen wil jij oplossen?"
 
     override fun confirmNoOfQuestion(noOfQuestion: Int): String {
+        if (noOfQuestion == 1) {
+            return "Jouw toets zal $noOfQuestion vraag bevatten."
+        }
         return "Jouw toets zal $noOfQuestion vragen bevatten."
     }
 
@@ -109,6 +117,8 @@ class TestStringsDutch : TestStrings {
         get() = "plus"
     override val whatIs: String
         get() = "Wat is "
+
+    override fun percentage(operandOne: Int, operandTwo: Int): String = "$whatIs$operandOne% van $operandTwo?"
 
 }
 

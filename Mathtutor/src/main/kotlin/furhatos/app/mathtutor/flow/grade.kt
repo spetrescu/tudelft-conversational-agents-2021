@@ -3,6 +3,8 @@ package furhatos.app.mathtutor.flow
 import furhatos.app.mathtutor.assessment.quizzes.AbstractQuestion
 import furhatos.app.mathtutor.assessment.quizzes.Question
 import furhatos.app.mathtutor.object_classes.currentEmotion
+import furhatos.app.mathtutor.gaze.ConvMode
+import furhatos.app.mathtutor.gaze.gazing
 import furhatos.app.mathtutor.strings.getGradeStrings
 import furhatos.flow.kotlin.State
 import furhatos.flow.kotlin.furhat
@@ -36,7 +38,7 @@ fun grade(questions: ArrayList<AbstractQuestion>, user: User): State = state {
         print("\n Current user emotion: $currentEmotion")
 
         delay(2500)
-
+        furhat.gazing(ConvMode.INTIMACY)
         if(score >= 6){
             emotionHandler.performGesture(furhat, "Happy")
             furhat.say(furhat.getGradeStrings().yourScoreIs(score))

@@ -1,9 +1,12 @@
 package furhatos.app.mathtutor.flow
 
 import furhatos.app.mathtutor.assessment.quizzes.*
-import furhatos.app.mathtutor.nlu.*
-import furhatos.app.mathtutor.object_classes.Subject
-import furhatos.app.mathtutor.object_classes.TrainingMode
+import furhatos.app.mathtutor.gaze.ConvMode
+import furhatos.app.mathtutor.gaze.gazing
+import furhatos.app.mathtutor.nlu.AnswerIntent
+import furhatos.app.mathtutor.nlu.DifficultyLevel
+import furhatos.app.mathtutor.nlu.NoIdeaIntent
+import furhatos.app.mathtutor.nlu.NoOfQuestionsIntent
 import furhatos.app.mathtutor.strings.getTestStrings
 import furhatos.flow.kotlin.State
 import furhatos.flow.kotlin.furhat
@@ -21,12 +24,13 @@ fun obtainNumberOfQuestions(): State = state(Interaction) {
 
     this.onResponse<NoOfQuestionsIntent> {
         noOfQuestions = it.intent.numberOfQuestions.getInteger("value")
-
+        furhat.gazing(ConvMode.INTIMACY)
         furhat.say(furhat.getTestStrings().confirmNoOfQuestion(noOfQuestions))
         terminate(noOfQuestions)
     }
 
     this.onResponse<NoIdeaIntent> {
+        furhat.gazing(ConvMode.INTIMACY)
         furhat.say(furhat.getTestStrings().confirmNoOfQuestion(noOfQuestions))
         terminate(noOfQuestions)
     }
@@ -43,6 +47,7 @@ fun obtainDifficultyLevel(): State = state(Interaction) {
 
     this.onResponse<DifficultyLevel> {
         difficultyLevel = it.intent.difficultyEntity.toString()
+        furhat.gazing(ConvMode.INTIMACY)
         furhat.say(furhat.getTestStrings().confirmDifficulty(difficultyLevel))
         terminate(difficultyLevel)
     }
@@ -72,11 +77,13 @@ val Test: State = state(Interaction) {
         language = furhat.voice.language
         noOfQuestions = call(obtainNumberOfQuestions()) as Int
         difficultyLevel = call(obtainDifficultyLevel()) as String
+        furhat.gazing(ConvMode.TURNTAKING)
         furhat.ask(furhat.getTestStrings().askToStartTest)
     }
 
     this.onReentry {
         currentQuestion = quiz?.questions?.get(questionNumber)
+        furhat.gazing(ConvMode.TURNTAKING)
         furhat.ask("${furhat.getTestStrings().whatIs} ${currentQuestion}?")
     }
 
@@ -91,6 +98,7 @@ val Test: State = state(Interaction) {
     }
 
     this.onResponse<Yes> {
+        furhat.gazing(ConvMode.COGNITIVE)
         furhat.say(furhat.getTestStrings().testStarts)
         quiz = getSubjectQuiz()
         furhat.say(furhat.getTestStrings().solveExercises)
