@@ -42,13 +42,16 @@ val Interaction: State = state(FallBackState) {
 
 val Leave : State = state(Interaction){
     onEntry {
+        furhat.gazing(ConvMode.TURNTAKING)
         furhat.ask("Do you really want to stop the lesson?")
     }
     this.onResponse<SayYes>{
+        furhat.gazing(ConvMode.INTIMACY)
         furhat.say("See you later!")
         goto(Idle)
     }
     this.onResponse<SayNo>{
+        furhat.gazing(ConvMode.INTIMACY)
         furhat.say("Let's get back to where we were!")
         terminate()
     }
@@ -89,7 +92,7 @@ val GiveTrainingMode: State = state(Interaction) {
             "example" -> goto(Examples)
             "explanation" -> goto(Explanation)
             else -> {
-                furhat.gazing(ConvMode.INTIMACY)
+                furhat.gazing(ConvMode.TURNTAKING)
                 furhat.say("I'm sorry, I didn't understand you, can you repeat what you want to do?")
                 reentry()
             }
@@ -133,7 +136,7 @@ val Questions: State = state(Interaction) {
     onEntry {
         furhat.gazing(ConvMode.INTIMACY)
         furhat.say("Let me give you a question!")
-        furhat.gazing(ConvMode.COGNITIVE)
+        furhat.gazing(ConvMode.TURNTAKING)
         when (currentsubject.currentSubject) {
             "multiplication" -> furhat.ask("What is the answer to $randomFirstValue multiplied by ${randomSecondValue}?")
             "division" -> furhat.ask("What is the answer to $dividend divided by $divisor?")
@@ -150,11 +153,12 @@ val Questions: State = state(Interaction) {
     }
 
     onReentry {
+        furhat.gazing(ConvMode.TURNTAKING)
         furhat.ask("Please repeat your answer.")
     }
 
     this.onResponse<QuestionAnswer> {
-        furhat.gazing(ConvMode.COGNITIVE)
+        furhat.gazing(ConvMode.TURNTAKING)
         val confirm = furhat.askYN("So, your answer is " + it.intent.givenanswer + ", is that correct?")
 
         if (confirm == true) {
@@ -176,7 +180,9 @@ val Questions: State = state(Interaction) {
     }
 
     this.onResponse<DontKnow>{
-        furhat.say("You don't know? Let me help you! The correct answer is: " + correctAnswer.toString())
+        furhat.say("You don't know?")
+        furhat.gazing(ConvMode.COGNITIVE)
+        furhat.say("Let me help you! The correct answer is: $correctAnswer")
         goto(GiveTrainingMode)
     }
 
@@ -208,7 +214,9 @@ val Examples: State = state(Interaction) {
     onEntry {
         furhat.say("Let me give you an example question!")
         when (currentsubject.currentSubject) {
+
             "multiplication" -> {
+                furhat.gazing(ConvMode.COGNITIVE)
                 furhat.say {
                     +"What is the answer to $randomFirstValue multiplied by $randomSecondValue? "
                     +delay(3000)
@@ -216,6 +224,7 @@ val Examples: State = state(Interaction) {
                 }
             }
             "division" -> {
+                furhat.gazing(ConvMode.COGNITIVE)
                 furhat.say {
                     +"What is the answer to $dividend divided by $divisor? "
                     +delay(3000)
@@ -223,6 +232,7 @@ val Examples: State = state(Interaction) {
                 }
             }
             "percentages" -> {
+                furhat.gazing(ConvMode.COGNITIVE)
                 furhat.say {
                     +"What is $number percent out of $out_of? "
                     +delay(3000)
@@ -230,6 +240,7 @@ val Examples: State = state(Interaction) {
                 }
             }
             "fractions" -> {
+                furhat.gazing(ConvMode.COGNITIVE)
                 furhat.say {
                     +"What is $firstfraction above $divisor plus $secondfraction above $divisor? "
                     +"Please give your answer as: number above $divisor. "
@@ -238,6 +249,7 @@ val Examples: State = state(Interaction) {
                 }
             }
             else -> {
+                furhat.gazing(ConvMode.INTIMACY)
                 furhat.say("I'm sorry, the topic isn't clear to me, can you repeat it?")
                 goto(Subject)
             }

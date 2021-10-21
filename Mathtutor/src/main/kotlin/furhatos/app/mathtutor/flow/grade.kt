@@ -2,6 +2,8 @@ package furhatos.app.mathtutor.flow
 
 import furhatos.app.mathtutor.assessment.quizzes.AbstractQuestion
 import furhatos.app.mathtutor.assessment.quizzes.Question
+import furhatos.app.mathtutor.gaze.ConvMode
+import furhatos.app.mathtutor.gaze.gazing
 import furhatos.app.mathtutor.strings.getGradeStrings
 import furhatos.flow.kotlin.State
 import furhatos.flow.kotlin.furhat
@@ -32,6 +34,7 @@ fun grade(questions: ArrayList<AbstractQuestion>): State = state {
         }
         delay(2500)
         furhat.say(furhat.getGradeStrings().yourScoreIs(score as Long))
+        furhat.gazing(ConvMode.INTIMACY)
         if(score >= 6){
             furhat.say("Congratulations! You passed the test")
             furhat.gesture(Gestures.BigSmile, async = true)
