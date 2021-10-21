@@ -6,6 +6,7 @@ import furhatos.app.mathtutor.strings.getGradeStrings
 import furhatos.flow.kotlin.State
 import furhatos.flow.kotlin.furhat
 import furhatos.flow.kotlin.state
+import furhatos.gestures.Gestures
 
 fun grade(questions: ArrayList<AbstractQuestion>): State = state {
     fun gradeCalculation(noOfCorrectlyAnsweredQuestions: Int, noOfQuestions: Int): Long =
@@ -15,6 +16,7 @@ fun grade(questions: ArrayList<AbstractQuestion>): State = state {
         val noOfQuestions: Int = questions.size
         var correctlyAnsweredQuestions = 0
         questions.forEach { question ->
+            println("correctanswer:" + question.getCorrectAnswer() + " useranswer: " + question.userAnswer!!.answerNumber)
             if (question.getCorrectAnswer() == question.userAnswer!!.answerNumber){
                 correctlyAnsweredQuestions += 1
             }
@@ -30,5 +32,13 @@ fun grade(questions: ArrayList<AbstractQuestion>): State = state {
         }
         delay(2500)
         furhat.say(furhat.getGradeStrings().yourScoreIs(score as Long))
+        if(score >= 6){
+            furhat.say("Congratulations! You passed the test")
+            furhat.gesture(Gestures.BigSmile, async = true)
+        }else{
+            furhat.say("Unfortunately you still need to practice a bit!")
+            furhat.gesture(Gestures.ExpressSad, async = true)
+        }
+        goto(Subject)
     }
 }

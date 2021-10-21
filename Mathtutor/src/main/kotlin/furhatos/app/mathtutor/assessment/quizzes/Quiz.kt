@@ -16,16 +16,16 @@ interface Quiz {
 abstract class AbstractQuiz: Quiz {
     val difficultyLimit: Int
         get() = when (language) {
-            Language.DUTCH -> when (difficulty) {
-                "Makkelijk" -> 11
-                "Gemiddeld" -> 21
-                "Moeilijk" -> 101
-                else -> 11
-            }
-            else -> when (difficulty) {
+            Language.ENGLISH_US -> when (difficulty) {
                 "Easy" -> 11
                 "Medium" -> 21
                 "Hard" -> 101
+                else -> 11
+            }
+            else -> when (difficulty) {
+                "Makkelijk" -> 11
+                "Gemiddeld" -> 21
+                "Moeilijk" -> 101
                 else -> 11
             }
         }

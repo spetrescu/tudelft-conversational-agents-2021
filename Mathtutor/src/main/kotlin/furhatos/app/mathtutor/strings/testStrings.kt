@@ -17,6 +17,8 @@ interface TestStrings : DataString {
     val division: String
     val addition: String
     val subtraction: String
+    val percentages: String
+    val fractions: String
     val whatIs: String
     fun percentage(operandOne: Int, operandTwo: Int): String
 }
@@ -57,6 +59,10 @@ class TestStringsEnglish : TestStrings {
         get() = "times"
     override val division: String
         get() = "divided by"
+    override val percentages: String
+        get() = "percent out of"
+    override val fractions: String
+        get() = "plus"
     override val addition: String
         get() = "plus"
     override val subtraction: String
@@ -105,6 +111,10 @@ class TestStringsDutch : TestStrings {
         get() = "plus"
     override val subtraction: String
         get() = "min"
+    override val percentages: String
+        get() = "percent van"
+    override val fractions: String
+        get() = "plus"
     override val whatIs: String
         get() = "Wat is "
 

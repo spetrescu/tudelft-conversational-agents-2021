@@ -12,14 +12,16 @@ class NoOfQuestionsIntent(
             Language.DUTCH -> listOf<String>(
              "Ik wil @numberOfQuestions vragen",
                 "@numberOfQuestions alstublieft",
-                "@numberOfQuestions alsjeblieft"
+                "@numberOfQuestions alsjeblieft",
+                "@numberOfQuestions"
             )
             else -> listOf<String>(
                 "@numberOfQuestions",
                 "I would like to have @numberOfQuestions",
                 "@numberOfQuestions questions please",
                 "@numberOfQuestions please",
-                "I want @numberOfQuestions"
+                "I want @numberOfQuestions",
+                "@numberOfQuestions"
             )
         }
     }

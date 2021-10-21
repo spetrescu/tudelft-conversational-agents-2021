@@ -60,9 +60,8 @@ val Test: State = state(Interaction) {
         return when (currentsubject.currentSubject) {
             "multiplication" -> MultiplicationQuiz(language!!, noOfQuestions!!, difficultyLevel!!, null)
             "division" -> DivisionQuiz(language!!, noOfQuestions!!, difficultyLevel!!, null)
-            // TODO: add percentages and fraction quiz
-            // "percentages" ->
-//            "fractions" ->
+            "percentages" -> PercentagesQuiz(language!!, noOfQuestions!!, difficultyLevel!!, null)
+            "fractions" -> FractionsQuiz(language!!, noOfQuestions!!, difficultyLevel!!, null)
             else -> throw Error("Subject has not been chosen!")
         }
     }
@@ -93,7 +92,7 @@ val Test: State = state(Interaction) {
 
     this.onResponse<Yes> {
         furhat.say(furhat.getTestStrings().testStarts)
-        quiz = MultiplicationQuiz(furhat.voice.language!!, noOfQuestions!!, difficultyLevel!!, null)
+        quiz = getSubjectQuiz()
         furhat.say(furhat.getTestStrings().solveExercises)
         reentry()
     }
