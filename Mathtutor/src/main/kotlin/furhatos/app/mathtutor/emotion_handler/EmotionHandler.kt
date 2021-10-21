@@ -78,12 +78,11 @@ class EmotionHandler{
                 furhat.voice.rate = 0.95
                 furhat.voice.volume = "-6dB"
             }
-            "Neutral" -> {
+            else -> {
                 furhat.voice.pitch = "default"
                 furhat.voice.rate = 1.0
                 furhat.voice.volume = "medium"
             }
-            else -> print("help")
         }
     }
 
