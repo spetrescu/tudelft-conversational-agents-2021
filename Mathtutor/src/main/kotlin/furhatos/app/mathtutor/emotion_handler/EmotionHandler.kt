@@ -10,7 +10,6 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.zeromq.ZMQ
 
-val logger = CommonUtils.getRootLogger()
 val context: ZMQ.Context = ZMQ.context(1)
 val socket = context.socket(zmq.ZMQ.ZMQ_SUB)
 
@@ -24,13 +23,6 @@ val persistentSmile = defineGesture("PersistentSmile"){
     }
     reset(4.0)
 }
-
-val responseDict = mapOf(
-    "Happy" to "Happy",
-    "Sad" to "Encouraging",
-    "Frustrated" to "Calming",
-    "Neutral" to "Neutral"
-)
 
 val happyGestures = listOf(persistentSmile)
 val encouragingGestures = listOf(Gestures.GazeAway, Gestures.Thoughtful, Gestures.ExpressSad)
