@@ -10,7 +10,7 @@ import furhatos.gestures.Gestures
 val Start: State = state(Interaction) {
     onEntry {
         furhat.gazing(ConvMode.INTIMACY)
-        furhat.ask("Hello, I'm your mathtutor, what's your name?")
+        furhat.ask("Hello, I'm Matthew! What's your name?")
     }
 
     onReentry {
@@ -25,6 +25,7 @@ val Start: State = state(Interaction) {
         val confirm = furhat.askYN("So, your name is " + it.intent.name + ", is that correct?")
         if (confirm == true) {
             furhat.gesture(Gestures.Smile, async = true)
+            furhat.say("Nice to meet you " + it.intent.name "! Let's start the tutoring session!")
             goto(Subject)
         } else {
             furhat.gesture(Gestures.ExpressSad, async = true)
