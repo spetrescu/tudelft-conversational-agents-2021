@@ -14,8 +14,8 @@ val Start: State = state(Interaction) {
         furhat.say("Hello!")
         delay(500)
         emotionHandler.performGesture(furhat, "Neutral")
-        furhat.ask("I'm your Math tutor. What's your name?")
-        furhat.ask("Hello, I'm your mathtutor, what's your name?")
+        furhat.ask("I'm Matthew! What's your name?")
+
     }
 
     onReentry {
@@ -30,6 +30,7 @@ val Start: State = state(Interaction) {
         val confirm = furhat.askYN("So, your name is " + it.intent.name + ", is that correct?")
         if (confirm == true) {
             furhat.gesture(Gestures.Smile, async = true)
+            furhat.say("Nice to meet you " + it.intent.name + "! Let's start the tutoring session!")
             goto(Subject)
         } else {
             emotionHandler.performGesture(furhat, "Encouraging")
