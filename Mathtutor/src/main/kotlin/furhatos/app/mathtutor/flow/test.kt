@@ -91,7 +91,7 @@ val Test: State = state(Interaction) {
         currentQuestion?.userAnswer = Answer(it.intent.answer.get("value") as Int)
         questionNumber += 1
         if (questionNumber >= noOfQuestions!!) {
-            goto(grade(quiz!!.questions))
+            goto(grade(quiz!!.questions, furhat.users.current))
         } else {
             reentry()
         }

@@ -3,13 +3,18 @@ package furhatos.app.mathtutor.flow
 import furhatos.flow.kotlin.*
 import furhatos.util.Gender
 import furhatos.util.Language
+import furhatos.app.mathtutor.emotion_handler.EmotionHandler
+
+val emotionHandler: EmotionHandler = EmotionHandler()
 
 val Idle: State = state {
 
     init {
         furhat.setVoice(Language.ENGLISH_US, Gender.MALE, setInputLanguage = true)
         if (users.count > 0) {
-            furhat.attend(users.random)
+            var currentUser = users.random
+            emotionHandler.startEmotionHandler(currentUser)
+            furhat.attend(currentUser)
             goto(Start)
         }
     }

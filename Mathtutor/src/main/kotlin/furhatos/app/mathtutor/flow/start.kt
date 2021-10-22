@@ -9,8 +9,13 @@ import furhatos.gestures.Gestures
 
 val Start: State = state(Interaction) {
     onEntry {
+        emotionHandler.performGesture(furhat, "Happy")
         furhat.gazing(ConvMode.INTIMACY)
-        furhat.ask("Hello, I'm Matthew! What's your name?")
+        furhat.say("Hello!")
+        delay(500)
+        emotionHandler.performGesture(furhat, "Neutral")
+        furhat.ask("I'm Matthew! What's your name?")
+
     }
 
     onReentry {
@@ -28,9 +33,10 @@ val Start: State = state(Interaction) {
             furhat.say("Nice to meet you " + it.intent.name + "! Let's start the tutoring session!")
             goto(Subject)
         } else {
-            furhat.gesture(Gestures.ExpressSad, async = true)
+            emotionHandler.performGesture(furhat, "Encouraging")
             furhat.gazing(ConvMode.INTIMACY)
             furhat.say("I'm sorry, I must have misunderstood.")
+            emotionHandler.performGesture(furhat, "Neutral")
             reentry()
         }
     }

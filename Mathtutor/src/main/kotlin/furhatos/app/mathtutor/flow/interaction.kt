@@ -10,7 +10,9 @@ import furhatos.app.mathtutor.nlu.Subjectlist
 import furhatos.app.mathtutor.nlu.Subjectname
 import furhatos.app.mathtutor.object_classes.Subject
 import furhatos.app.mathtutor.object_classes.TrainingMode
+import furhatos.app.mathtutor.object_classes.currentEmotion
 import furhatos.flow.kotlin.*
+import furhatos.flow.kotlin.voice.Voice
 import furhatos.gestures.Gestures
 
 var currentsubject = Subject()
@@ -40,7 +42,7 @@ val Interaction: State = state(FallBackState) {
 
 }
 
-val Leave : State = state(Interaction){
+val Leave: State = state(Interaction) {
     onEntry {
         furhat.gazing(ConvMode.TURNTAKING)
         furhat.ask("Do you really want to stop the lesson?")
@@ -59,16 +61,21 @@ val Leave : State = state(Interaction){
 
 val Subject: State = state(Interaction) {
     onEntry {
-        furhat.gazing(ConvMode.TURNTAKING)
-        furhat.ask("What subject would you like to practice? You can choose between ${Subjectlist().getEnum(furhat.voice.language!!)}")
-
+        furhat.ask(
+            "What subject would you like to practice? You can choose between ${
+                furhat.voice.emphasis(
+                    Subjectlist().getEnum(furhat.voice.language!!)
+                        .toString(), Voice.EmphasisLevel.MODERATE
+                )
+            }"
+        )
     }
     this.onResponse<Subjectname> {
         val answeredSubject = it.intent.subject
         currentsubject.currentSubject = answeredSubject.toString()
         goto(GiveTrainingMode)
     }
-    this.onResponse<ExitProgram>{
+    this.onResponse<ExitProgram> {
         call(Leave)
         reentry()
     }
@@ -98,15 +105,14 @@ val GiveTrainingMode: State = state(Interaction) {
             }
         }
     }
-    this.onResponse<Back>{
+    this.onResponse<Back> {
         goto(Subject)
     }
-    this.onResponse<ExitProgram>{
+    this.onResponse<ExitProgram> {
         call(Leave)
         reentry()
     }
 }
-
 
 val Questions: State = state(Interaction) {
     val randomFirstValue = (1..10).random()
@@ -164,12 +170,37 @@ val Questions: State = state(Interaction) {
         if (confirm == true) {
             val givenAnswer = it.intent.givenanswer.getInteger("value")
             val isAnswerCorrect = givenAnswer == correctAnswer
+            var currentEmotion = furhat.users.current.currentEmotion.emotion
+            print("\n Current user emotion: $currentEmotion")
+
             if (isAnswerCorrect) {
                 furhat.gazing(ConvMode.INTIMACY)
-                furhat.say("Your answer " + it.intent.givenanswer + " is correct!")
+                emotionHandler.performGesture(furhat, "Happy")
+                if (currentEmotion.equals("Happy")) {
+                    furhat.say("I see that you are confident in your answer. And you should be!")
+                } else {
+                    furhat.say("Nice job!")
+                }
+                emotionHandler.performGesture(furhat, "Confirm")
+                furhat.say("Your answer: " + it.intent.givenanswer + ", is correct.")
+                emotionHandler.performGesture(furhat, "Neutral")
             } else {
                 furhat.gazing(ConvMode.INTIMACY)
-                furhat.say("Your answer " + it.intent.givenanswer + " is wrong! The answer should have been " + correctAnswer.toString())
+                if (currentEmotion.equals("Sad")) {
+                    emotionHandler.performGesture(furhat, "Encouraging")
+                    furhat.say("I'm sorry, your answer: " + it.intent.givenanswer + ", wasn't correct. I see you are a bit disappointed.")
+                    emotionHandler.performGesture(furhat, "Uplifting")
+                    furhat.say("But don't worry! We can practice a bit more.")
+                } else if (currentEmotion.equals("Frustrated")) {
+                    emotionHandler.performGesture(furhat, "Calming")
+                    furhat.say("" + it.intent.givenanswer + ", wasn't the right answer, unfortunately. You look a bit frustrated, but we are almost there!")
+                    emotionHandler.performGesture(furhat, "Uplifting")
+                    furhat.say("Let's practice a bit more.")
+                } else {
+                    furhat.say("Oops, your answer: " + it.intent.givenanswer + ", wasn't correct. ")
+                }
+                emotionHandler.performGesture(furhat, "Neutral")
+                furhat.say("The correct answer was: $correctAnswer")
             }
         } else {
             furhat.gesture(Gestures.ExpressSad, async = true)
@@ -179,14 +210,30 @@ val Questions: State = state(Interaction) {
         goto(GiveTrainingMode)
     }
 
-    this.onResponse<DontKnow>{
-        furhat.say("You don't know?")
+    this.onResponse<DontKnow> {
+        var currentEmotion = furhat.users.current.currentEmotion.emotion
+        print("\n Current user emotion: " + currentEmotion)
         furhat.gazing(ConvMode.COGNITIVE)
-        furhat.say("Let me help you! The correct answer is: $correctAnswer")
+        if (currentEmotion.equals("Sad")){
+            emotionHandler.performGesture(furhat, "Encouraging")
+            furhat.say("Don't look so sad. It's okay to not know the answer.")
+
+        } else if (currentEmotion.equals("Frustrated")) {
+            emotionHandler.performGesture(furhat, "Calming")
+            furhat.say("I know it's frustrating, but it's okay to not know the answer.")
+        } else{
+            emotionHandler.performGesture(furhat, "Encouraging")
+            furhat.say("That's okay.")
+        }
+
+        emotionHandler.performGesture(furhat, "Uplifting")
+        furhat.say("The correct answer is: " + correctAnswer.toString())
+        emotionHandler.performGesture(furhat, "Neutral")
+        furhat.say("Let me know if I need to go over some more explanations.")
         goto(GiveTrainingMode)
     }
 
-    this.onResponse<ExitProgram>{
+    this.onResponse<ExitProgram> {
         call(Leave)
         reentry()
     }
@@ -256,7 +303,7 @@ val Examples: State = state(Interaction) {
         }
         goto(GiveTrainingMode)
     }
-    this.onResponse<ExitProgram>{
+    this.onResponse<ExitProgram> {
         call(Leave)
         reentry()
     }
@@ -264,8 +311,10 @@ val Examples: State = state(Interaction) {
 
 val Explanation: State = state(Interaction) {
     onEntry {
+        emotionHandler.performGesture(furhat, "Uplifting")
         furhat.say("Alright, you want the topic explained, let's start!")
         //todo: get better explanations as these are too basic
+        emotionHandler.performGesture(furhat, "Neutral")
         when (currentsubject.currentSubject) {
             "multiplication" -> {
                 furhat.gazing(ConvMode.COGNITIVE)
@@ -297,7 +346,7 @@ val Explanation: State = state(Interaction) {
                 furhat.say(
                     "A fraction is how many parts of a whole:" +
                             "the top number (the numerator) says how many parts we have." +
-                            "the bottom number (the denominator) says how many equal parts the whole is divided into."+
+                            "the bottom number (the denominator) says how many equal parts the whole is divided into." +
                             "For example 1 above 5 plus 2 above 5 is 3 above 5 total."
                 )
             }

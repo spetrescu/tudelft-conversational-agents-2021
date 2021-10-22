@@ -3,3 +3,4 @@ Mathtutor/build/*
 Mathtutor/logs/*
 Mathtutor/*.iml
 Mathtutor/*.idea/
+Mathtutor/build*
