@@ -23,6 +23,7 @@ fun obtainNumberOfQuestions(): State = state(Interaction) {
     }
 
     this.onResponse<NoOfQuestionsIntent> {
+        emotionHandler.socket_sentiment_pub.send(emotionHandler.sentiment_pub_topic + " " + it.text)
         noOfQuestions = it.intent.numberOfQuestions.getInteger("value")
         furhat.gazing(ConvMode.INTIMACY)
         furhat.say(furhat.getTestStrings().confirmNoOfQuestion(noOfQuestions))
@@ -30,6 +31,7 @@ fun obtainNumberOfQuestions(): State = state(Interaction) {
     }
 
     this.onResponse<NoIdeaIntent> {
+        emotionHandler.socket_sentiment_pub.send(emotionHandler.sentiment_pub_topic + " " + it.text)
         furhat.gazing(ConvMode.INTIMACY)
         furhat.say(furhat.getTestStrings().confirmNoOfQuestion(noOfQuestions))
         terminate(noOfQuestions)
@@ -46,6 +48,7 @@ fun obtainDifficultyLevel(): State = state(Interaction) {
 
 
     this.onResponse<DifficultyLevel> {
+        emotionHandler.socket_sentiment_pub.send(emotionHandler.sentiment_pub_topic + " " + it.text)
         difficultyLevel = it.intent.difficultyEntity.toString()
         furhat.gazing(ConvMode.INTIMACY)
         furhat.say(furhat.getTestStrings().confirmDifficulty(difficultyLevel))
@@ -88,6 +91,7 @@ val Test: State = state(Interaction) {
     }
 
     this.onResponse<AnswerIntent> {
+        emotionHandler.socket_sentiment_pub.send(emotionHandler.sentiment_pub_topic + " " + it.text)
         currentQuestion?.userAnswer = Answer(it.intent.answer.get("value") as Int)
         questionNumber += 1
         if (questionNumber >= noOfQuestions!!) {
@@ -98,6 +102,7 @@ val Test: State = state(Interaction) {
     }
 
     this.onResponse<Yes> {
+        emotionHandler.socket_sentiment_pub.send(emotionHandler.sentiment_pub_topic + " " + it.text)
         furhat.gazing(ConvMode.COGNITIVE)
         furhat.say(furhat.getTestStrings().testStarts)
         quiz = getSubjectQuiz()

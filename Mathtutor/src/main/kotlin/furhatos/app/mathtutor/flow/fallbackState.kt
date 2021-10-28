@@ -11,6 +11,7 @@ val FallBackState: State = state {
     var nomatch = 0
 
     onResponse {
+        emotionHandler.socket_sentiment_pub.send(emotionHandler.sentiment_pub_topic + " " + it.text)
         emotionHandler.performGesture(furhat, "Encouraging")
         ++nomatch
         if (nomatch == 1) {
@@ -26,6 +27,7 @@ val FallBackState: State = state {
     }
 
     onNoResponse {
+        emotionHandler.socket_sentiment_pub.send(emotionHandler.sentiment_pub_topic + " " + it.text)
         emotionHandler.performGesture(furhat, "Encouraging")
         ++noinput
         if (noinput == 1) {

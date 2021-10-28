@@ -8,7 +8,8 @@ class UserName(
 )
 
 class Emotion(
-    var emotion : String = "Neutral"
+    var emotion : String = "Neutral",
+    var polarity : Float = 0.0f
 )
 
 val User.userName : UserName

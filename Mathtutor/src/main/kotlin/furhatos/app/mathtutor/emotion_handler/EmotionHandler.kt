@@ -11,10 +11,6 @@ import kotlinx.coroutines.launch
 import org.zeromq.ZMQ
 
 val context: ZMQ.Context = ZMQ.context(1)
-val socket_emotions = context.socket(zmq.ZMQ.ZMQ_SUB)
-val socket_sentiment_pub = context.socket(zmq.ZMQ.ZMQ_PUB)
-val socket_sentiment_sub = context.socket(zmq.ZMQ.ZMQ_SUB)
-val emotions_topic = "emotions"
 
 val persistentSmile = defineGesture("PersistentSmile"){
     frame(0.0, 1.5) {
@@ -32,19 +28,29 @@ val encouragingGestures = listOf(Gestures.GazeAway, Gestures.Thoughtful, Gesture
 val calmingGestures = listOf(Gestures.Thoughtful, Gestures.ExpressSad, Gestures.BrowFrown)
 
 class EmotionHandler{
+    val socket_emotions = context.socket(zmq.ZMQ.ZMQ_SUB)
+    val socket_sentiment_pub = context.socket(zmq.ZMQ.ZMQ_PUB)
+    val socket_sentiment_sub = context.socket(zmq.ZMQ.ZMQ_SUB)
+    val emotions_topic = "emotions"
+    val sentiment_sub_topic = "sentiment_toClient"
+    val sentiment_pub_topic = "sentiment_toServer"
+
     // Adapted from: https://github.com/FurhatRobotics/camerafeed-demo
     fun startEmotionHandler(user: User) {
         GlobalScope.launch {
             socket_emotions.subscribe(emotions_topic)
+            socket_sentiment_sub.subscribe(sentiment_sub_topic)
             print("Connecting to server..")
             socket_emotions.connect("tcp://*:5556")
             socket_sentiment_pub.connect("tcp://*:5557")
             socket_sentiment_sub.connect("tcp://*:5558")
             while (true) {
-                val message = socket.recvStr()
+                val message = socket_emotions.recvStr()
                 var label = message.split(" ")[1]
                 user.currentEmotion.emotion = label
-                //logger.warn(label)
+
+                val polarity = socket_sentiment_sub.recvStr().split(" ")[1]
+                user.currentEmotion.polarity = polarity.toFloat()
             }
         }
     }

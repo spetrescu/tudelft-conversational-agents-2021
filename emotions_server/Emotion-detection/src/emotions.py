@@ -10,6 +10,7 @@ from tensorflow.keras.layers import MaxPooling2D
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 import os
 import zmq
+from textblob import TextBlob
 
 # Some server setup
 context = zmq.Context()
@@ -21,10 +22,13 @@ emotion_topic = "emotions"
 socket_sentiment_sub = context.socket(zmq.SUB)
 socket_sentiment_sub.bind("tcp://*:5557")
 sentiment_sub_topic = "sentiment_toServer"
+socket_sentiment_sub.subscribe(sentiment_sub_topic)
 
 socket_sentiment_pub = context.socket(zmq.PUB)
 socket_sentiment_pub.bind("tcp://*:5558")
 sentiment_pub_topic = "sentiment_toClient"
+
+current_sentence = "aaah"
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
@@ -154,6 +158,11 @@ elif mode == "display":
             maxindex = int(np.argmax(prediction))
             cv2.putText(frame, emotion_dict[maxindex], (x+20, y-60), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2, cv2.LINE_AA)
             publish_msg(socket_emotions, emotion_topic, emotion_dict[maxindex])
+
+        current_sentence = socket_sentiment_sub.recv_string().split(" ")[1]
+        blob = TextBlob(current_sentence)
+        polarity = blob.sentiment.polarity
+        publish_msg(socket_sentiment_pub, sentiment_pub_topic, polarity)
 
         cv2.imshow('Video', cv2.resize(frame,(1600,960),interpolation = cv2.INTER_CUBIC))
         if cv2.waitKey(1) & 0xFF == ord('q'):
