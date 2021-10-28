@@ -49,13 +49,13 @@ fun grade(questions: ArrayList<AbstractQuestion>, user: User): State = state {
                 furhat.say("Give yourself some credit, you did a great job.")
             }
         }else{
-            if (currentEmotion.equals("Sad") && user.currentEmotion.polarity < 0.0f) {
+            if (currentEmotion.equals("Sad") && user.currentEmotion.polarity <= 0.0f) {
                 emotionHandler.performGesture(furhat, "Encouraging")
                 furhat.say(furhat.getGradeStrings().yourScoreIs(score))
                 furhat.say("Unfortunately you didn't pass the test this time.")
                 emotionHandler.performGesture(furhat, "Uplifting")
                 furhat.say("But don't worry! We can practice a bit more.")
-            } else if (currentEmotion.equals("Frustrated")  && user.currentEmotion.polarity < 0.0f) {
+            } else if (currentEmotion.equals("Frustrated")  && user.currentEmotion.polarity <= 0.0f) {
                 emotionHandler.performGesture(furhat, "Calming")
                 furhat.say(furhat.getGradeStrings().yourScoreIs(score))
                 furhat.say("I'm sorry you didn't pass the test this time.")

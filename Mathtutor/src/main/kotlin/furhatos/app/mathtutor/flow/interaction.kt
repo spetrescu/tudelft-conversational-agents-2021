@@ -184,7 +184,7 @@ val Questions: State = state(Interaction) {
             if (isAnswerCorrect) {
                 furhat.gazing(ConvMode.INTIMACY)
                 emotionHandler.performGesture(furhat, "Happy")
-                if (currentEmotion.equals("Happy") && users.current.currentEmotion.polarity > 0.0f) {
+                if (currentEmotion.equals("Happy") && users.current.currentEmotion.polarity >= 0.0f) {
                     furhat.say("I see that you are confident in your answer. And you should be!")
                 } else {
                     furhat.say("Nice job!")
@@ -194,12 +194,12 @@ val Questions: State = state(Interaction) {
                 emotionHandler.performGesture(furhat, "Neutral")
             } else {
                 furhat.gazing(ConvMode.INTIMACY)
-                if (currentEmotion.equals("Sad") && users.current.currentEmotion.polarity < 0.0f) {
+                if (currentEmotion.equals("Sad") && users.current.currentEmotion.polarity <= 0.0f) {
                     emotionHandler.performGesture(furhat, "Encouraging")
                     furhat.say("I'm sorry, your answer: " + it.intent.givenanswer + ", wasn't correct. I see you are a bit disappointed.")
                     emotionHandler.performGesture(furhat, "Uplifting")
                     furhat.say("But don't worry! We can practice a bit more.")
-                } else if (currentEmotion.equals("Frustrated") && users.current.currentEmotion.polarity < 0.0f) {
+                } else if (currentEmotion.equals("Frustrated") && users.current.currentEmotion.polarity <= 0.0f) {
                     emotionHandler.performGesture(furhat, "Calming")
                     furhat.say("" + it.intent.givenanswer + ", wasn't the right answer, unfortunately. You look a bit frustrated, but we are almost there!")
                     emotionHandler.performGesture(furhat, "Uplifting")
@@ -223,11 +223,11 @@ val Questions: State = state(Interaction) {
         var currentEmotion = furhat.users.current.currentEmotion.emotion
         print("\n Current user emotion: " + currentEmotion)
         furhat.gazing(ConvMode.COGNITIVE)
-        if (currentEmotion.equals("Sad") && users.current.currentEmotion.polarity < 0.0f){
+        if (currentEmotion.equals("Sad") && users.current.currentEmotion.polarity <= 0.0f){
             emotionHandler.performGesture(furhat, "Encouraging")
             furhat.say("Don't look so sad. It's okay to not know the answer.")
 
-        } else if (currentEmotion.equals("Frustrated") && users.current.currentEmotion.polarity < 0.0f) {
+        } else if (currentEmotion.equals("Frustrated") && users.current.currentEmotion.polarity <= 0.0f) {
             emotionHandler.performGesture(furhat, "Calming")
             furhat.say("I know it's frustrating, but it's okay to not know the answer.")
         } else{
