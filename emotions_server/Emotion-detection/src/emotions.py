@@ -159,10 +159,17 @@ elif mode == "display":
             cv2.putText(frame, emotion_dict[maxindex], (x+20, y-60), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2, cv2.LINE_AA)
             publish_msg(socket_emotions, emotion_topic, emotion_dict[maxindex])
 
-        current_sentence = socket_sentiment_sub.recv_string().split(" ")[1]
-        blob = TextBlob(current_sentence)
-        polarity = blob.sentiment.polarity
-        publish_msg(socket_sentiment_pub, sentiment_pub_topic, polarity)
+        current_sentence = ""
+        try:
+            current_sentence = socket_sentiment_sub.recv_string(flags=1).split(" ", 1)[1]
+            print(current_sentence)
+            blob = TextBlob(current_sentence)
+            polarity = blob.sentiment.polarity
+            print(blob.sentiment)
+            publish_msg(socket_sentiment_pub, sentiment_pub_topic, polarity)
+        except:
+            pass
+
 
         cv2.imshow('Video', cv2.resize(frame,(1600,960),interpolation = cv2.INTER_CUBIC))
         if cv2.waitKey(1) & 0xFF == ord('q'):

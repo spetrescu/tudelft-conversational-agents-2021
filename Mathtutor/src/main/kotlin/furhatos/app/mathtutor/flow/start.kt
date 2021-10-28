@@ -24,6 +24,7 @@ val Start: State = state(Interaction) {
     }
 
     this.onResponse<Name> {
+        print(it.text)
         emotionHandler.socket_sentiment_pub.send(emotionHandler.sentiment_pub_topic + " " + it.text)
         val name = it.intent.name
         users.current.userName.name = name
