@@ -1,13 +1,8 @@
 package furhatos.app.mathtutor.flow
 
-import furhatos.app.mathtutor.nlu.*
-
 import furhatos.app.mathtutor.gaze.ConvMode
 import furhatos.app.mathtutor.gaze.gazing
-import furhatos.app.mathtutor.nlu.Mode
-import furhatos.app.mathtutor.nlu.QuestionAnswer
-import furhatos.app.mathtutor.nlu.Subjectlist
-import furhatos.app.mathtutor.nlu.Subjectname
+import furhatos.app.mathtutor.nlu.*
 import furhatos.app.mathtutor.object_classes.Subject
 import furhatos.app.mathtutor.object_classes.TrainingMode
 import furhatos.app.mathtutor.object_classes.currentEmotion
@@ -42,6 +37,9 @@ val Interaction: State = state(FallBackState) {
 
 }
 
+/**
+ * Leaving MATHew is handled here
+ */
 val Leave: State = state(Interaction) {
     onEntry {
         furhat.gazing(ConvMode.TURNTAKING)
@@ -61,6 +59,9 @@ val Leave: State = state(Interaction) {
     }
 }
 
+/**
+ * The subject selection takes place in this state
+ */
 val Subject: State = state(Interaction) {
     onEntry {
         furhat.ask(
@@ -85,6 +86,9 @@ val Subject: State = state(Interaction) {
     }
 }
 
+/**
+ * Here, the user gets to select how they want to be tutored for the subject selection of choice
+ */
 val GiveTrainingMode: State = state(Interaction) {
     onEntry {
         furhat.gazing(ConvMode.TURNTAKING)
@@ -121,6 +125,9 @@ val GiveTrainingMode: State = state(Interaction) {
     }
 }
 
+/**
+ * Questions are generated in this state
+ */
 val Questions: State = state(Interaction) {
     val randomFirstValue = (1..10).random()
     val randomSecondValue = (1..10).random()
@@ -178,7 +185,7 @@ val Questions: State = state(Interaction) {
         if (confirm == true) {
             val givenAnswer = it.intent.givenanswer.getInteger("value")
             val isAnswerCorrect = givenAnswer == correctAnswer
-            var currentEmotion = furhat.users.current.currentEmotion.emotion
+            val currentEmotion = furhat.users.current.currentEmotion.emotion
             print("\n Current user emotion: $currentEmotion")
 
             if (isAnswerCorrect) {
@@ -219,24 +226,30 @@ val Questions: State = state(Interaction) {
     }
 
     this.onResponse<DontKnow> {
-        emotionHandler.socket_sentiment_pub.send(emotionHandler.sentiment_pub_topic + " " + it.text)
-        var currentEmotion = furhat.users.current.currentEmotion.emotion
-        print("\n Current user emotion: " + currentEmotion)
+        val currentEmotion = furhat.users.current.currentEmotion.emotion
+        print("\n Current user emotion: $currentEmotion")
         furhat.gazing(ConvMode.COGNITIVE)
-        if (currentEmotion.equals("Sad") && users.current.currentEmotion.polarity <= 0.0f){
-            emotionHandler.performGesture(furhat, "Encouraging")
-            furhat.say("Don't look so sad. It's okay to not know the answer.")
+        when (currentEmotion) {
+            "Sad" -> {
+                furhat.gazing(ConvMode.INTIMACY)
+                emotionHandler.performGesture(furhat, "Encouraging")
+                furhat.say("Don't look so sad. It's okay to not know the answer.")
 
-        } else if (currentEmotion.equals("Frustrated") && users.current.currentEmotion.polarity <= 0.0f) {
-            emotionHandler.performGesture(furhat, "Calming")
-            furhat.say("I know it's frustrating, but it's okay to not know the answer.")
-        } else{
-            emotionHandler.performGesture(furhat, "Encouraging")
-            furhat.say("That's okay.")
+            }
+            "Frustrated" -> {
+                furhat.gazing(ConvMode.INTIMACY)
+                emotionHandler.performGesture(furhat, "Calming")
+                furhat.say("I know it's frustrating, but it's okay to not know the answer.")
+            }
+            else -> {
+                furhat.gazing(ConvMode.INTIMACY)
+                emotionHandler.performGesture(furhat, "Encouraging")
+                furhat.say("That's okay.")
+            }
         }
-
+        furhat.gazing(ConvMode.INTIMACY)
         emotionHandler.performGesture(furhat, "Uplifting")
-        furhat.say("The correct answer is: " + correctAnswer.toString())
+        furhat.say("The correct answer is: $correctAnswer")
         emotionHandler.performGesture(furhat, "Neutral")
         furhat.say("Let me know if I need to go over some more explanations.")
         goto(GiveTrainingMode)
@@ -320,6 +333,9 @@ val Examples: State = state(Interaction) {
     }
 }
 
+/**
+ * This states handles the explanation of topics
+ */
 val Explanation: State = state(Interaction) {
     onEntry {
         emotionHandler.performGesture(furhat, "Uplifting")
@@ -329,37 +345,34 @@ val Explanation: State = state(Interaction) {
         when (currentsubject.currentSubject) {
             "multiplication" -> {
                 furhat.gazing(ConvMode.COGNITIVE)
-                furhat.say(
-                    "The idea of multiplication is repeated addition. For example: 5 × 3 = 5 + 5 + 5 = 15." +
-                            "We use the × symbol to mean multiply"
-                )
+                furhat.say("The idea of multiplication is repeated addition.")
+                furhat.say("We use the × symbol to mean multiply")
+                furhat.say("For example: 5 × 3 = 5 + 5 + 5 = 15.")
             }
             "division" -> {
                 furhat.gazing(ConvMode.COGNITIVE)
-                furhat.say(
-                    "Division is splitting into equal parts or groups. You share fair among the groups. " +
-                            "For example: there are 15 chocolates, and 3 friends want to share them, how do they divide the chocolates?" +
-                            "They should get 5 each." +
-                            "We use the / symbol to mean divide"
-                )
+                furhat.say("Division is splitting into equal parts or groups.")
+                furhat.say("You share fair among the groups.")
+                furhat.say("For example: there are 15 chocolates, and 3 friends want to share them, how do they divide the chocolates?")
+                furhat.say("They should get 5 each.")
+                furhat.say("We use the / slash symbol to mean divide")
             }
             "percentages" -> {
                 furhat.gazing(ConvMode.COGNITIVE)
-                furhat.say(
-                    "A percentage means parts per 100" +
-                            "The symbol is %" +
-                            "For example: 25% means 25 per 100" +
-                            "Let's do another example: 10% means 10 out of every 100. So if 10% of 500 people have ice cream, then 50 people have ice cream."
-                )
+                furhat.say("A percentage means parts per 100")
+                furhat.say("The symbol is %")
+                furhat.say("For example: 25% means 25 per 100")
+                furhat.say("Let's do another example: 10% means 10 out of every 100.")
+                furhat.say("So if 10% of 500 people have ice cream, then 50 people have ice cream.")
+
             }
             "fractions" -> {
                 furhat.gazing(ConvMode.COGNITIVE)
-                furhat.say(
-                    "A fraction is how many parts of a whole:" +
-                            "the top number (the numerator) says how many parts we have." +
-                            "the bottom number (the denominator) says how many equal parts the whole is divided into." +
-                            "For example 1 above 5 plus 2 above 5 is 3 above 5 total."
-                )
+                furhat.say("A fraction is how many parts of a whole:")
+                furhat.say("the top number (the numerator) says how many parts we have.")
+                furhat.say("The bottom number (the denominator) says how many equal parts the whole is divided into.")
+                furhat.say("For example: 1 over 5 plus 2 over 5 is 3 over 5 in total.")
+
             }
             else -> {
                 furhat.gazing(ConvMode.INTIMACY)
