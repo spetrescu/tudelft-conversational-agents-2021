@@ -11,12 +11,13 @@ import furhatos.flow.kotlin.furhat
 import furhatos.flow.kotlin.state
 import furhatos.gestures.Gestures
 import furhatos.records.User
+import kotlin.math.roundToInt
 
 fun grade(questions: ArrayList<AbstractQuestion>, user: User): State = state {
-    fun gradeCalculation(noOfCorrectlyAnsweredQuestions: Int, noOfQuestions: Int): Long =
-        noOfCorrectlyAnsweredQuestions.toLong() / noOfQuestions.toLong() * 9 + 1
+    fun gradeCalculation(noOfCorrectlyAnsweredQuestions: Int, noOfQuestions: Int): Int =
+        (noOfCorrectlyAnsweredQuestions.toFloat() / noOfQuestions.toFloat() * 9 + 1).roundToInt()
 
-    fun calculateGrade(): Long {
+    fun calculateGrade(): Int {
         val noOfQuestions: Int = questions.size
         var correctlyAnsweredQuestions = 0
         questions.forEach { question ->
@@ -33,7 +34,7 @@ fun grade(questions: ArrayList<AbstractQuestion>, user: User): State = state {
         furhat.say(furhat.getGradeStrings().checkingAnswers)
         val score = call {
             calculateGrade()
-        } as Long
+        } as Int
         val currentEmotion = user.currentEmotion.emotion
         print("\n Current user emotion: $currentEmotion")
 
