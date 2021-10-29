@@ -11,6 +11,8 @@ val Idle: State = state {
 
     init {
         furhat.setVoice(Language.ENGLISH_US, Gender.MALE, setInputLanguage = true)
+        var currentUser = users.random
+        emotionHandler.serverNluNlg(currentUser)
         if (users.count > 0) {
             var currentUser = users.random
             furhat.attend(currentUser)

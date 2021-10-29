@@ -20,6 +20,8 @@ val Start: State = state(Interaction) {
         print(" Emo handler started!")
 
         emotionHandler.performGesture(furhat, "Happy")
+        var currentUser = users.random
+        emotionHandler.sendClientNluNlg(currentUser)
         furhat.gazing(ConvMode.INTIMACY)
         furhat.say("Hello!")
         delay(500)
