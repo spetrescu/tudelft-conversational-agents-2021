@@ -92,9 +92,8 @@ class EmotionHandler{
         GlobalScope.launch {
             val context = ZMQ.context(1)
             val socket = context.socket(ZMQ.REQ)
-            println("ZOZOZOZOZOZO ")
             socket.connect("tcp://localhost:5599")
-            var plainRequest = "HelloZZZZZZZ"
+            var plainRequest = "Hello"
             var byteRequest = plainRequest.toByteArray()
             byteRequest[byteRequest.size - 1] = 0
             println("Client: sending request $plainRequest")
