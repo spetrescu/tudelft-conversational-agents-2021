@@ -30,34 +30,23 @@ val calmingGestures = listOf(Gestures.Thoughtful, Gestures.ExpressSad, Gestures.
 class EmotionHandler{
     val socket_emotions = context.socket(zmq.ZMQ.ZMQ_SUB)
     val socket_sentiment_pub = context.socket(zmq.ZMQ.ZMQ_PUB)
-    val socket_sentiment_sub = context.socket(zmq.ZMQ.ZMQ_SUB)
     val emotions_topic = "emotions"
-    val sentiment_sub_topic = "sentiment_toClient"
     val sentiment_pub_topic = "sentiment_toServer"
 
     // Adapted from: https://github.com/FurhatRobotics/camerafeed-demo
     fun startEmotionHandler(user: User) {
         GlobalScope.launch {
             socket_emotions.subscribe(emotions_topic)
-            socket_sentiment_sub.subscribe(sentiment_sub_topic)
-            print("Connecting to server..")
+            print("\n\n\nConnecting to server..\n\n\n")
             socket_emotions.connect("tcp://*:5556")
             socket_sentiment_pub.connect("tcp://*:5557")
-            socket_sentiment_sub.connect("tcp://*:5558")
             while (true) {
-                try {
-                    val message = socket_emotions.recvStr()
-                    var label = message.split(" ")[1]
-                    user.currentEmotion.emotion = label
-                } catch(e: Exception){
-                    continue
-                }
-                try {
-                    val polarity = socket_sentiment_sub.recvStr().split(" ")[1]
-                    user.currentEmotion.polarity = polarity.toFloat()
-                } catch(e: Exception){
-                    continue
-                }
+                var message = socket_emotions.recvStr()
+                print(message)
+                var label = message.split(" ")[1]
+                var polarity = message.split(" ")[2]
+                user.currentEmotion.emotion = label
+                user.currentEmotion.polarity = polarity.toFloat()
             }
         }
     }
