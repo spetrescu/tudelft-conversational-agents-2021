@@ -15,6 +15,10 @@ import furhatos.gestures.Gestures
 
 val Start: State = state(Interaction) {
     onEntry {
+        print(" Starting emo handler")
+        emotionHandler.startEmotionHandler(users.current)
+        print(" Emo handler started!")
+
         emotionHandler.performGesture(furhat, "Happy")
         furhat.gazing(ConvMode.INTIMACY)
         furhat.say("Hello!")

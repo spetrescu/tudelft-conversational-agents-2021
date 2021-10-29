@@ -24,10 +24,6 @@ socket_sentiment_sub.bind("tcp://*:5557")
 sentiment_sub_topic = "sentiment_toServer"
 socket_sentiment_sub.subscribe(sentiment_sub_topic)
 
-socket_sentiment_pub = context.socket(zmq.PUB)
-socket_sentiment_pub.bind("tcp://*:5558")
-sentiment_pub_topic = "sentiment_toClient"
-
 current_sentence = "aaah"
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
@@ -149,6 +145,8 @@ elif mode == "display":
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         faces = facecasc.detectMultiScale(gray,scaleFactor=1.3, minNeighbors=5)
 
+        maxindex = 4
+
         for (x, y, w, h) in faces:
             cv2.rectangle(frame, (x, y-50), (x+w, y+h+10), (255, 0, 0), 2)
             roi_gray = gray[y:y + h, x:x + w]
@@ -157,18 +155,18 @@ elif mode == "display":
             prediction_pairs = dict(zip(emotion_dict.values(), prediction[0]))
             maxindex = int(np.argmax(prediction))
             cv2.putText(frame, emotion_dict[maxindex], (x+20, y-60), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2, cv2.LINE_AA)
-            publish_msg(socket_emotions, emotion_topic, emotion_dict[maxindex])
 
         current_sentence = ""
+        polarity = 0.0
         try:
             current_sentence = socket_sentiment_sub.recv_string(flags=1).split(" ", 1)[1]
             print(current_sentence)
             blob = TextBlob(current_sentence)
             polarity = blob.sentiment.polarity
             print(blob.sentiment)
-            publish_msg(socket_sentiment_pub, sentiment_pub_topic, polarity)
         except:
             pass
+        publish_msg(socket_emotions, emotion_topic, emotion_dict[maxindex] + " " + str(polarity))
 
 
         cv2.imshow('Video', cv2.resize(frame,(1600,960),interpolation = cv2.INTER_CUBIC))
