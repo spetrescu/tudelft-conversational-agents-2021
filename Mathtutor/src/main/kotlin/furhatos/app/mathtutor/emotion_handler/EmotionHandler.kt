@@ -45,12 +45,19 @@ class EmotionHandler{
             socket_sentiment_pub.connect("tcp://*:5557")
             socket_sentiment_sub.connect("tcp://*:5558")
             while (true) {
-                val message = socket_emotions.recvStr()
-                var label = message.split(" ")[1]
-                user.currentEmotion.emotion = label
-
-                val polarity = socket_sentiment_sub.recvStr().split(" ")[1]
-                user.currentEmotion.polarity = polarity.toFloat()
+                try {
+                    val message = socket_emotions.recvStr()
+                    var label = message.split(" ")[1]
+                    user.currentEmotion.emotion = label
+                } catch(e: Exception){
+                    continue
+                }
+                try {
+                    val polarity = socket_sentiment_sub.recvStr().split(" ")[1]
+                    user.currentEmotion.polarity = polarity.toFloat()
+                } catch(e: Exception){
+                    continue
+                }
             }
         }
     }
