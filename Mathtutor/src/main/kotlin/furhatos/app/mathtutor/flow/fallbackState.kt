@@ -5,7 +5,10 @@ import furhatos.app.mathtutor.gaze.gazing
 import furhatos.app.mathtutor.strings.getFallBackStateStrings
 import furhatos.flow.kotlin.*
 
-
+/**
+ * The strings that MATHew utters were collected in a different class
+ * with the prospect of offering multiple language support.
+ */
 val FallBackState: State = state {
     var noinput = 0
     var nomatch = 0

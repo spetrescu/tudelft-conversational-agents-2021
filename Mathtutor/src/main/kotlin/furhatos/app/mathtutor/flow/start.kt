@@ -7,6 +7,12 @@ import furhatos.app.mathtutor.object_classes.userName
 import furhatos.flow.kotlin.*
 import furhatos.gestures.Gestures
 
+/**
+ * Every utterance of Furhat (i.e. furhat.say())
+ * is preceded by a method call that sets the emotion of MATHew
+ * followed by a method call that triggers a temporary gaze aversion
+ */
+
 val Start: State = state(Interaction) {
     onEntry {
         emotionHandler.performGesture(furhat, "Happy")
