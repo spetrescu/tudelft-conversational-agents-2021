@@ -345,34 +345,32 @@ val Explanation: State = state(Interaction) {
         when (currentsubject.currentSubject) {
             "multiplication" -> {
                 furhat.gazing(ConvMode.COGNITIVE)
-                furhat.say("The idea of multiplication is repeated addition.")
+                furhat.say("In multiplication we perform repeated addition.")
                 furhat.say("We use the × symbol to mean multiply")
-                furhat.say("For example: 5 × 3 = 5 + 5 + 5 = 15.")
+                furhat.say("For example, if we have 3 people and they all have 5 candies, in total we have 5 + 5 + 5 = 5 × 3 = 15 candies.")
             }
             "division" -> {
                 furhat.gazing(ConvMode.COGNITIVE)
-                furhat.say("Division is splitting into equal parts or groups.")
-                furhat.say("You share fair among the groups.")
-                furhat.say("For example: there are 15 chocolates, and 3 friends want to share them, how do they divide the chocolates?")
+                furhat.say("Division is sharing a certain amount equally among a group.")
+                furhat.say("For example: there are 15 candies, and 3 friends want to share them, how do they divide the candies?")
                 furhat.say("They should get 5 each.")
-                furhat.say("We use the / slash symbol to mean divide")
+                furhat.say("We use the / slash symbol to mean divide so 15 / 3 = 5")
             }
             "percentages" -> {
                 furhat.gazing(ConvMode.COGNITIVE)
-                furhat.say("A percentage means parts per 100")
+                furhat.say("A percentage means amount per 100")
                 furhat.say("The symbol is %")
                 furhat.say("For example: 25% means 25 per 100")
-                furhat.say("Let's do another example: 10% means 10 out of every 100.")
-                furhat.say("So if 10% of 500 people have ice cream, then 50 people have ice cream.")
+                furhat.say("We can take a look at another example: 10% means 10 out of every 100.")
+                furhat.say("So if 10% of 500 people have candy, then 50 people have candy.")
 
             }
             "fractions" -> {
                 furhat.gazing(ConvMode.COGNITIVE)
                 furhat.say("A fraction is how many parts of a whole:")
                 furhat.say("the top number (the numerator) says how many parts we have.")
-                furhat.say("The bottom number (the denominator) says how many equal parts the whole is divided into.")
-                furhat.say("For example: 1 over 5 plus 2 over 5 is 3 over 5 in total.")
-
+                furhat.say("The bottom number (the denominator) says how much the whole is divided into.")
+                furhat.say("For example: if we slice a pie in 5 pieces and you and I both have one piece, we do 1 over 5 + 1 over 5 = 2 over 5. We have two of the five pieces.")
             }
             else -> {
                 furhat.gazing(ConvMode.INTIMACY)
