@@ -10,13 +10,26 @@ from tensorflow.keras.layers import MaxPooling2D
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 import os
 import zmq
+from textblob import TextBlob
 
 # Some server setup
-port = "5556"
 context = zmq.Context()
-socket = context.socket(zmq.PUB)
-socket.bind("tcp://*:%s" % port)
-zmq_topic = "furhat"
+
+socket_emotions = context.socket(zmq.PUB)
+socket_emotions.bind("tcp://*:5556")
+emotion_topic = "emotions"
+
+socket_sentiment_sub = context.socket(zmq.SUB)
+socket_sentiment_sub.bind("tcp://*:5557")
+sentiment_sub_topic = "sentiment_toServer"
+socket_sentiment_sub.subscribe(sentiment_sub_topic)
+
+socket_sentiment_pub = context.socket(zmq.PUB)
+socket_sentiment_pub.bind("tcp://*:5558")
+sentiment_pub_topic = "sentiment_toClient"
+
+current_sentence = "aaah"
+
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 # command line argument
@@ -26,7 +39,7 @@ mode = ap.parse_args().mode
 
 
 # publishes a message through the zmq server on the specified topic
-def publish_msg(topic, message_data):
+def publish_msg(socket, topic, message_data):
     print("%s %s" % (topic, str(message_data)))
     socket.send_string("%s %s" % (topic, str(message_data)))
 
@@ -144,7 +157,19 @@ elif mode == "display":
             prediction_pairs = dict(zip(emotion_dict.values(), prediction[0]))
             maxindex = int(np.argmax(prediction))
             cv2.putText(frame, emotion_dict[maxindex], (x+20, y-60), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2, cv2.LINE_AA)
-            publish_msg(zmq_topic, emotion_dict[maxindex])
+            publish_msg(socket_emotions, emotion_topic, emotion_dict[maxindex])
+
+        current_sentence = ""
+        try:
+            current_sentence = socket_sentiment_sub.recv_string(flags=1).split(" ", 1)[1]
+            print(current_sentence)
+            blob = TextBlob(current_sentence)
+            polarity = blob.sentiment.polarity
+            print(blob.sentiment)
+            publish_msg(socket_sentiment_pub, sentiment_pub_topic, polarity)
+        except:
+            pass
+
 
         cv2.imshow('Video', cv2.resize(frame,(1600,960),interpolation = cv2.INTER_CUBIC))
         if cv2.waitKey(1) & 0xFF == ord('q'):

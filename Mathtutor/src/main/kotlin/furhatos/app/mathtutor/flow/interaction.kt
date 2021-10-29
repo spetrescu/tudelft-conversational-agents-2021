@@ -45,12 +45,14 @@ val Leave: State = state(Interaction) {
         furhat.gazing(ConvMode.TURNTAKING)
         furhat.ask("Do you really want to stop the lesson?")
     }
-    this.onResponse<SayYes> {
+    this.onResponse<SayYes>{
+        emotionHandler.socket_sentiment_pub.send(emotionHandler.sentiment_pub_topic + " " + it.text)
         furhat.gazing(ConvMode.INTIMACY)
         furhat.say("See you later!")
         goto(Idle)
     }
-    this.onResponse<SayNo> {
+    this.onResponse<SayNo>{
+        emotionHandler.socket_sentiment_pub.send(emotionHandler.sentiment_pub_topic + " " + it.text)
         furhat.gazing(ConvMode.INTIMACY)
         furhat.say("Let's get back to where we were!")
         terminate()
@@ -72,11 +74,13 @@ val Subject: State = state(Interaction) {
         )
     }
     this.onResponse<Subjectname> {
+        emotionHandler.socket_sentiment_pub.send(emotionHandler.sentiment_pub_topic + " " + it.text)
         val answeredSubject = it.intent.subject
         currentsubject.currentSubject = answeredSubject.toString()
         goto(GiveTrainingMode)
     }
     this.onResponse<ExitProgram> {
+        emotionHandler.socket_sentiment_pub.send(emotionHandler.sentiment_pub_topic + " " + it.text)
         call(Leave)
         reentry()
     }
@@ -95,6 +99,7 @@ val GiveTrainingMode: State = state(Interaction) {
 
     }
     this.onResponse<Mode> {
+        emotionHandler.socket_sentiment_pub.send(emotionHandler.sentiment_pub_topic + " " + it.text)
         val answeredMode = it.intent.trainingmode.toString()
         currentMode.currentMode = answeredMode
         when (answeredMode) {
@@ -110,9 +115,11 @@ val GiveTrainingMode: State = state(Interaction) {
         }
     }
     this.onResponse<Back> {
+        emotionHandler.socket_sentiment_pub.send(emotionHandler.sentiment_pub_topic + " " + it.text)
         goto(Subject)
     }
     this.onResponse<ExitProgram> {
+        emotionHandler.socket_sentiment_pub.send(emotionHandler.sentiment_pub_topic + " " + it.text)
         call(Leave)
         reentry()
     }
@@ -171,6 +178,7 @@ val Questions: State = state(Interaction) {
     }
 
     this.onResponse<QuestionAnswer> {
+        emotionHandler.socket_sentiment_pub.send(emotionHandler.sentiment_pub_topic + " " + it.text)
         furhat.gazing(ConvMode.TURNTAKING)
         val confirm = furhat.askYN("So, your answer is " + it.intent.givenanswer + ", is that correct?")
 
@@ -183,7 +191,7 @@ val Questions: State = state(Interaction) {
             if (isAnswerCorrect) {
                 furhat.gazing(ConvMode.INTIMACY)
                 emotionHandler.performGesture(furhat, "Happy")
-                if (currentEmotion.equals("Happy")) {
+                if (currentEmotion.equals("Happy") && users.current.currentEmotion.polarity >= 0.0f) {
                     furhat.say("I see that you are confident in your answer. And you should be!")
                 } else {
                     furhat.say("Nice job!")
@@ -193,12 +201,12 @@ val Questions: State = state(Interaction) {
                 emotionHandler.performGesture(furhat, "Neutral")
             } else {
                 furhat.gazing(ConvMode.INTIMACY)
-                if (currentEmotion == "Sad") {
+                if (currentEmotion.equals("Sad") && users.current.currentEmotion.polarity <= 0.0f) {
                     emotionHandler.performGesture(furhat, "Encouraging")
                     furhat.say("I'm sorry, your answer: " + it.intent.givenanswer + ", wasn't correct. I see you are a bit disappointed.")
                     emotionHandler.performGesture(furhat, "Uplifting")
                     furhat.say("But don't worry! We can practice a bit more.")
-                } else if (currentEmotion == "Frustrated") {
+                } else if (currentEmotion.equals("Frustrated") && users.current.currentEmotion.polarity <= 0.0f) {
                     emotionHandler.performGesture(furhat, "Calming")
                     furhat.say("" + it.intent.givenanswer + ", wasn't the right answer, unfortunately. You look a bit frustrated, but we are almost there!")
                     emotionHandler.performGesture(furhat, "Uplifting")
@@ -248,6 +256,7 @@ val Questions: State = state(Interaction) {
     }
 
     this.onResponse<ExitProgram> {
+        emotionHandler.socket_sentiment_pub.send(emotionHandler.sentiment_pub_topic + " " + it.text)
         call(Leave)
         reentry()
     }
@@ -318,6 +327,7 @@ val Examples: State = state(Interaction) {
         goto(GiveTrainingMode)
     }
     this.onResponse<ExitProgram> {
+        emotionHandler.socket_sentiment_pub.send(emotionHandler.sentiment_pub_topic + " " + it.text)
         call(Leave)
         reentry()
     }
