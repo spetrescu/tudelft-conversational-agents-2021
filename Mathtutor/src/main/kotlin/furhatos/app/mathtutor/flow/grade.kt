@@ -34,10 +34,11 @@ fun grade(questions: ArrayList<AbstractQuestion>, user: User): State = state {
         val score = call {
             calculateGrade()
         } as Long
-        var currentEmotion = user.currentEmotion.emotion
+        val currentEmotion = user.currentEmotion.emotion
         print("\n Current user emotion: $currentEmotion")
 
         delay(2500)
+        print(furhat.getGradeStrings().yourScoreIs(score))
         furhat.gazing(ConvMode.INTIMACY)
         if(score >= 6){
             emotionHandler.performGesture(furhat, "Happy")
