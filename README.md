@@ -5,11 +5,11 @@ How to use the emotions server:
 - Create two directories: `emotions_server/Emotion_detection/src/data/train` and `emotions_server/Emotion_detection/src/data/test`
 - Open the contents of `emotions_server`, preferably as a project in PyCharm
 
-- Alter the run config:
--- Script path: `emotions.py`
--- Parameters: `--mode display`
--- Python interpreter 3.6
--- Working directory: `\emotions_server\Emotion-detection\src`
+Alter the run config:
+- Script path: `emotions.py`
+- Parameters: `--mode display`
+- Python interpreter 3.6
+- Working directory: `\emotions_server\Emotion-detection\src`
 
 - (Make a venv and) install the packages in `requirements.txt` through pip
 
