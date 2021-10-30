@@ -8,10 +8,23 @@ import furhatos.util.Language
 import furhatos.nlu.common.Number
 
 
-// Wtf is going on intent
 class Confused : Intent() {
     override fun getExamples(lang: Language): List<String> {
         return listOf("Who are you?", "Where am I?", "What?", "What is this?", "What the hell is this?")
+    }
+}
+
+class NluNlgBranch : Intent(){
+    override fun getExamples(lang: Language): List<String> {
+        return listOf(
+            "Task oriented dialog",
+            "Task dialog",
+            "task dialog",
+            "Oriented dialog",
+            "oriented dialog",
+            "Task",
+            "task"
+        )
     }
 }
 

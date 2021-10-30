@@ -12,8 +12,15 @@ class Emotion(
     var polarity : Float = 0.0f
 )
 
+class Response(
+    var response : String = "No response"
+)
+
 val User.userName : UserName
     get() = data.getOrPut(UserName::class.qualifiedName, UserName())
 
 val User.currentEmotion : Emotion
     get() = data.getOrPut(Emotion::class.qualifiedName, Emotion())
+
+val User.currentResponse : Response
+    get() = data.getOrPut(Response::class.qualifiedName, Response())

@@ -2,7 +2,11 @@ package furhatos.app.mathtutor.flow
 
 import furhatos.app.mathtutor.gaze.ConvMode
 import furhatos.app.mathtutor.gaze.gazing
+import furhatos.app.mathtutor.nlu.ExitProgram
 import furhatos.app.mathtutor.nlu.Name
+import furhatos.app.mathtutor.nlu.NluNlgBranch
+import furhatos.app.mathtutor.object_classes.currentEmotion
+import furhatos.app.mathtutor.object_classes.currentResponse
 import furhatos.app.mathtutor.object_classes.userName
 import furhatos.flow.kotlin.*
 import furhatos.gestures.Gestures
@@ -19,9 +23,9 @@ val Start: State = state(Interaction) {
         emotionHandler.startEmotionHandler(users.current)
         print(" Emo handler started!")
 
+        emotionHandler.serverNluNlg(furhat, users.current)
+
         emotionHandler.performGesture(furhat, "Happy")
-        var currentUser = users.random
-        emotionHandler.sendClientNluNlg(currentUser)
         furhat.gazing(ConvMode.INTIMACY)
         furhat.say("Hello!")
         delay(500)
@@ -33,6 +37,11 @@ val Start: State = state(Interaction) {
     onReentry {
         furhat.gazing(ConvMode.INTIMACY)
         furhat.ask("Can you please repeat your name?")
+    }
+
+    this.onResponse<NluNlgBranch> {
+        furhat.say("You chose the Natural Language Processing Branch!")
+        goto(FirstUtterance)
     }
 
     this.onResponse<Name> {
@@ -54,4 +63,78 @@ val Start: State = state(Interaction) {
             reentry()
         }
     }
+}
+
+val FirstUtterance: State = state(Interaction) {
+    onEntry {
+        furhat.ask("Tell something to our agent!")
+    }
+
+    this.onResponse {
+        emotionHandler.clientNluNlg(it.text)
+        furhat.say("Now waiting for answer from our system... answer from our system")
+        goto(ReceiveResponse)
+    }
+}
+
+val Intermediary: State = state(Interaction) {
+
+    onEntry {
+        delay(2000)
+        val currentResponse = furhat.users.current.currentResponse.response
+        print("onEntryIntermediary\n")
+        print("system: $currentResponse\n")
+        furhat.ask(currentResponse)
+    }
+
+    onReentry {
+        delay(2000)
+        val currentResponse = furhat.users.current.currentResponse.response
+        print("onReentryIntermediary\n")
+        print("system: $currentResponse\n")
+        furhat.ask(currentResponse)
+    }
+
+    this.onResponse {
+        emotionHandler.clientNluNlg(it.text)
+        goto(ReceiveResponse)
+    }
+
+    this.onResponse<ExitProgram> {
+        furhat.say("See you later!")
+        goto(Idle)
+    }
+
+}
+
+
+val ReceiveResponse: State = state(Interaction) {
+
+    onEntry {
+        delay(2000)
+        //var currentResponse = users.current.currentResponse.response
+        val currentResponse = furhat.users.current.currentResponse.response
+        print("onEntryReceiveResponse\n")
+        print("system: $currentResponse\n")
+        furhat.ask(currentResponse)
+    }
+
+    onReentry {
+        delay(2000)
+        val currentResponse = furhat.users.current.currentResponse.response
+        print("onReentryReceiveResponsey\n")
+        print("system: $currentResponse\n")
+        furhat.ask(currentResponse)
+    }
+
+    this.onResponse {
+        emotionHandler.clientNluNlg(it.text)
+        goto(Intermediary)
+    }
+
+    this.onResponse<ExitProgram> {
+        furhat.say("See you later!")
+        goto(Idle)
+    }
+
 }

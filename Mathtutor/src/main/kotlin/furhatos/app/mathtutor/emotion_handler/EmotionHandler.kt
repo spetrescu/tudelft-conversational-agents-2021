@@ -1,6 +1,8 @@
 package furhatos.app.mathtutor.emotion_handler
 import furhatos.app.mathtutor.object_classes.currentEmotion
+import furhatos.app.mathtutor.object_classes.currentResponse
 import furhatos.flow.kotlin.Furhat
+import furhatos.flow.kotlin.furhat
 import furhatos.gestures.BasicParams.*
 import furhatos.gestures.Gestures
 import furhatos.gestures.defineGesture
@@ -51,25 +53,7 @@ class EmotionHandler{
         }
     }
 
-    val socket_nlu = context.socket(zmq.ZMQ.ZMQ_SUB)
-    val nlu_topic = "nlu_text"
-
-    fun nluClient(user: User) {
-        GlobalScope.launch {
-            socket_nlu.subscribe(nlu_topic)
-            print("\n\n\nConnecting to new server to get mrssages from Flask..\n\n\n")
-            socket_nlu.connect("tcp://*:5568")
-            print("Do something")
-            while (true) {
-                var message = socket_nlu.recvStr()
-                print(message)
-                print("Do something")
-
-            }
-        }
-    }
-
-    fun serverNluNlg(user: User) {
+    fun serverNluNlg(furhat: Furhat, user: User) {
         GlobalScope.launch {
             val context = ZMQ.context(1)
             val socket = context.socket(ZMQ.REP)
@@ -77,33 +61,39 @@ class EmotionHandler{
             socket.bind("tcp://*:5897")
             println("Accepting connections on port 5897...\n")
             while (true) {
-                val rawRequest = socket.recv(0)
-                val cleanRequest = String(rawRequest, 0, rawRequest.size - 1)
-                println("Server: Request received : $cleanRequest")
-                var plainReply = "World "
-                var rawReply = plainReply.toByteArray()
-                rawReply[rawReply.size - 1] = 0
-                socket.send(plainReply)
+                //val rawRequest = socket.recv(0)
+                var rawRequestStr = socket.recvStr()
+                //val cleanRequest = String(rawRequest, 0, rawRequest.size - 1)
+
+                //println("serverNluNlg: Request received : $rawRequestStr")
+                furhat.users.current.currentResponse.response = rawRequestStr.toString()
+                //var plainReply = "World "
+                //var rawReply = plainReply.toByteArray()
+                //rawReply[rawReply.size - 1] = 0
+                //socket.send(plainReply)
             }
         }
     }
 
-    fun sendClientNluNlg(user: User) {
+    fun clientNluNlg(message: String) {
         GlobalScope.launch {
             val context = ZMQ.context(1)
             val socket = context.socket(ZMQ.REQ)
+            //print("\nclientNluNlg: Send message - $message - to ZMQ REP\n")
+            print("user: $message\n")
             socket.connect("tcp://localhost:5599")
-            var plainRequest = "Hello"
+            var plainRequest = message
             var byteRequest = plainRequest.toByteArray()
             byteRequest[byteRequest.size - 1] = 0
-            println("Client: sending request $plainRequest")
-            socket.send(byteRequest, 0)
+            //println("\nclientNluNlg: sending request $plainRequest")
+            //socket.send(byteRequest, 0)
+            socket.send(plainRequest)
         }
     }
 
     // acts with a gesture - pitch - rate - volume
     fun performGesture(furhat: Furhat, gesture: String) {
-        print("\nActing " + gesture)
+        print("\nActing " + gesture + "\n")
         when (gesture){
             "Happy" -> {
                 furhat.gesture(happyGestures.random(), async = true)
