@@ -2,8 +2,7 @@
 This file contains information on how to go about trainng and testing our model. 
 As we are not able to upload this amount of information, the whole codebase (for the NLU part) can be downloaded by visiting the [following link](https://drive.google.com/drive/folders/1Wtz3tGZtTG6u3i7GEy3bKG6dAmbsICF0?usp=sharing). 
 <br>
-!!! Make sure to download the archive and extract it under `tudelft-conversational-agents-2021
-/soloist/`
+!!! Make sure to download the archive and extract it under `tudelft-conversational-agents-2021/soloist/`
 
 ## Runing npm server
 `tudelft-conversational-agents-2021/soloist/soloist/html$ npm install` <br>
