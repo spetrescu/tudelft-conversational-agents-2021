@@ -1,5 +1,7 @@
 # MATHew
 
+[Project Report](https://github.com/spetrescu/tudelft-conversational-agents-2021/blob/main/Report.pdf)
+
 How to use the emotions server:
 
 - Create two directories: `emotions_server/Emotion_detection/src/data/train` and `emotions_server/Emotion_detection/src/data/test`
@@ -23,3 +25,9 @@ Furhat responds:
 - Calming, then uplifting when user is frustrated
 
 Each furhat 'emotional response' has a set of gestures it can pick from. It also alters the voice's pitch, rate and volume, similar to the table we saw in the lecture on Affects. 
+
+## Authors
+- Doreen Mulder
+- Laura Ottevanger
+- Stefan Petrescu
+- Rohan Sobha
